@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dante Project</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="reset.css" />
+  <link rel="stylesheet" href="fonts.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="js/openseadragon/openseadragon.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <!--
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#"><h2>Images</h2></a></li>
+        <li><a href="#"><h2>About</h2></a></li>
+      </ul>
+    </nav>
+  </header>
+    !-->
+  <main>
+    <section id="osd-1" class="viewer">
+    </section>
+    <section class="dresser">
+      <section class="drawer-handle-container" data-drawer="container" >
+        <img src="assets/circle-rh.svg" class="drawer-handle drawer-handle-img" data-drawer="handle" tabindex="0" />
+      </section>
+      <nav class="drawer drawer-books drawer-closed" data-drawer="books" >
+        <a data-book-link="inferno">INFERNO</a>
+        <a data-book-link="purgatorio">PURGATORIO</a>
+        <a data-book-link="paradiso">PARADISO</a>
+      </nav>
+      <nav class="drawer drawer-inferno drawer-closed" data-drawer="inferno" >
+      </nav>
+      <nav class="drawer drawer-purgatorio drawer-closed" data-drawer="purgatorio" >
+      </nav>
+      <nav class="drawer drawer-paradiso drawer-closed" data-drawer="paradiso" >
+      </nav>
+    </section>
+  </main>
+
+  <script src="js/script.js" type="text/javascript"></script>
+</body>
+</html>

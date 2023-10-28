@@ -1,0 +1,177 @@
+html {
+    --hand-timing: cubic-bezier(0,1.15,.75,1.0);
+
+    --primary-shadow-color: rgb(50 20 20 / 0.8);
+
+    --virgil-blue-100: rgb(129 156 185);
+    --virgil-blue-200: rgb(107 140 183);
+    --virgil-blue-400: rgb( 64 107 158);
+    --virgil-blue-500: rgb( 55  96 150);
+    --virgil-blue-700: rgb( 54  87 138);
+    --virgil-blue-800: rgb( 51  67 101);
+
+    --drawer-handle-hidden-drop-shadow:  drop-shadow(var(--primary-shadow-color) -25px -10px 1px);
+    --drawer-handle-peeking-drop-shadow: drop-shadow(var(--primary-shadow-color) -6px -4px 1.5px);
+    --drawer-handle-erect-drop-shadow:   drop-shadow(var(--primary-shadow-color) -3.5px -3.75px 1.65px);
+}
+
+body {
+    background: rgb(255 234 200);
+    font-family: Quattrocento;
+    height: 100%;
+    width: 100%;
+}
+
+main {
+    width: 100dvw;
+    height: 100dvh;
+}
+
+main .viewer {
+    width: 100%;
+    height: 100%;
+}
+
+.drawer-handle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    height: 100%;
+    width: 15vw;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
+
+    transition: transform 350ms var(--hand-timing),
+                filter 500ms var(--hand-timing),
+                visibility linear 550ms;
+}
+
+.drawer-handle-container-visible {
+    visibility: visible;
+    transform: translateX(0) scaleX(1);
+}
+
+.drawer-handle-container-hidden {
+    visibility: hidden;
+    transform: translateX(-100%) scaleX(0.5);
+}
+
+.drawer-handle {
+    height: 45%;
+    cursor: pointer;
+
+    transform: translateX(-100%) translateY(6%) scale(0.92);
+    transition: transform 350ms var(--hand-timing),
+                filter 500ms var(--hand-timing),
+                visibility linear 550ms;
+    filter: var(--drawer-handle-hidden-drop-shadow);
+}
+
+.drawer-handle-hidden {
+    visibility: hidden;
+    transform: translateX(-100%) translateY(6%) scale(0.92);
+    filter: var(--drawer-handle-hidden-drop-shadow);
+}
+
+.drawer-handle-peeking {
+    transform: translateX(-25%) translateY(3%) scale(0.96);
+    filter: var(--drawer-handle-peeking-drop-shadow);
+
+}
+
+.drawer-handle-erect {
+    transform: translateX(-3%) translateY(0);
+    filter: var(--drawer-handle-erect-drop-shadow);
+}
+
+.drawer {
+    position: fixed;
+    top: 0;
+    left: 5vw;
+    height: 100dvh;
+    display: flex;
+    flex-flow: column wrap;
+    max-width: 60rem;
+
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    justify-content: center;
+    font-size: 1.3rem;
+
+    gap: .2rem;
+    color: black;
+    font-family: Quattrocento-stretched;
+    font-weight: 900;
+
+    transition: transform 400ms var(--hand-timing),
+                visibility linear 401ms;
+    
+}
+
+.drawer-books {
+    font-family: Quattrocento-stretched;
+    font-weight: 900;
+    flex-flow: row wrap;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    letter-spacing: .1rem;
+    line-height: 1.5;
+}
+
+.drawer a {
+    flex: 1;
+    background: rgb(64 107 158 / 0.6);
+    /*
+    backdrop-filter: blur(2px);
+    */
+    box-shadow: -3px 1.1px 2px rgb(20 9 4 / 0.2);
+    border-radius: 2px;
+    border: 1.5px solid rgb(250 240 240);
+    max-height: 10dvh;
+
+    margin: .1rem 0.5rem;
+
+    cursor: pointer;
+    padding: .6rem 1rem;
+    text-align: center;
+
+    transition: transform 300ms var(--hand-timing),
+                box-shadow 250ms linear,
+                background 200ms linear,
+                z-index 150ms;
+
+    z-index: 1;
+}
+
+.drawer a:hover {
+    transform: translateX(6%) scale(1.07);
+    background: rgb(79 122 173 / 0.6);
+    box-shadow: -2.5px 0.8px 3px rgb(14 0 1 / 0.2);
+    z-index: 2;
+}
+
+.drawer-books a {
+    max-height: 100%;
+}
+
+.drawer-closed {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-200%) scale(0.8);
+    transition: transform 500ms var(--hand-timing),
+                opacity 650ms,
+                visibility linear 1301ms;
+}
+
+.drawer-open {
+    visibility: visible; 
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform 300ms var(--hand-timing),
+                opacity 200ms;
+}

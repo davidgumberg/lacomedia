@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Hahmlet';
+    src: url('fonts/Hahmlet.ttf');
+}
+
+@font-face {
+    font-family: 'Amagro';
+    src: url('fonts/Amagro.ttf');
+}
+@font-face {
+    font-family: 'Quattrocento-stretched';
+    src: url('fonts/Quattrocento-stretched.ttf');
+}
+@font-face {
+    font-family: 'Quattrocento';
+    font-weight: regular;
+    src: url('fonts/Quattrocento-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Quattrocento';
+    font-weight: bold;
+    src: url('fonts/Quattrocento-Bold.ttf');
+}
