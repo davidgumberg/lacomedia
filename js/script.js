@@ -122,6 +122,8 @@ function Drawer(elDrawer) {
   }
 }
 
+const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
+
 var viewer = OpenSeadragon({
     id: "osd-1",
     visibilityRatio: 1,
@@ -129,7 +131,7 @@ var viewer = OpenSeadragon({
     maxZoomPixelRatio: 42,
     subPixelRoundingForTransparency: 2,
     prefixUrl: "/openseadragon/images/",
-    tileSources: "images/smb/inferno/VIII.dzi",
+    tileSources: DZ_URL_PREFIX + "smb/inferno/VIII.dzi",
     showNavigationControl: false,
     gestureSettingsMouse: {
         clickToZoom: false,
@@ -215,7 +217,7 @@ function viewportHasBigBlackBars(viewer) {
   }
 }
 
-const imageSchemaPath = 'images/schema.json';
+const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
 
 let imageSchemaJSON
 fetch(imageSchemaPath)
@@ -290,7 +292,7 @@ function setCanto(event) {
     throw new Error("No version could be found for this canto")
   }
 
-  viewer.open(`images/${defaultVersion}/${book}/${canto}.dzi`)
+  viewer.open(`${DZ_URL_PREFIX}${defaultVersion}/${book}/${canto}.dzi`)
   DRESSER.closeAllDrawers(false)
 }
 
