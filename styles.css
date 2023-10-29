@@ -87,6 +87,8 @@ main .viewer {
 }
 
 .drawer {
+    overflow: scroll;
+
     position: fixed; 
     top: 0;
     height: 100dvh;
@@ -113,7 +115,6 @@ main .viewer {
     margin-top: 1dvh;
 
     cursor: pointer;
-
 }
 
 i {
@@ -138,7 +139,7 @@ i {
     transform: scale(1.02);
 }
 
-i[data-headliner="back-btn"] {
+.back-btn {
     background: url(assets/finger.svg);
     background-size: contain;
     background-position: bottom;
@@ -162,14 +163,21 @@ i[data-headliner="back-btn"] {
 }
 
 .drawer-books .drawer-contents {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
 
     /* flow must be switched for writing mode*/
     flex-flow: row wrap;
     writing-mode: vertical-lr;
+    justify-content: center;
+    align-items: center;
     text-orientation: upright;
     letter-spacing: .08rem;
     line-height: 1.5;
+}
+
+.drawer-books .drawer-contents a {
+    max-width: 4rem;
+    padding: 0.8rem 2rem;
 }
 
 .drawer-contents a {
@@ -179,7 +187,7 @@ i[data-headliner="back-btn"] {
 
     background: rgb(64 107 158 / 0.6);
     
-    /* backdrop-filter: blur(2px); */
+    backdrop-filter: blur(2px);
     
     flex: 1;
     border-radius: 2px;
@@ -190,7 +198,7 @@ i[data-headliner="back-btn"] {
     margin: .1rem 0.5rem;
 
     cursor: pointer;
-    padding: .6rem 1rem;
+    padding: .4rem 1rem;
     text-align: center;
     vertical-align: middle;
 

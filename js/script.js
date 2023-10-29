@@ -122,7 +122,7 @@ function Drawer(elDrawer) {
   }
 }
 
-const DZ_URL_PREFIX = "https://d28v1mjaicadah.cloudfront.net/"
+const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 
 var viewer = OpenSeadragon({
     id: "osd-1",
@@ -164,6 +164,23 @@ const elParadisoLink = document.querySelector ('[data-book-link="paradiso"]')
 elInfernoLink.addEventListener   ("click", openBookDrawer)
 elPurgatorioLink.addEventListener("click", openBookDrawer)
 elParadisoLink.addEventListener  ("click", openBookDrawer)
+
+const elsBackBtn = document.querySelectorAll('a.drawer-headliner')
+elsBackBtn.forEach( (backBtn) => {
+  console.log(backBtn)
+  backBtn.addEventListener("click", backBtnClickHandler)
+})
+
+function backBtnClickHandler(event){
+  clickedLink = event.currentTarget.dataset.headliner
+  if(clickedLink === 'books'){
+    DRESSER.closeAllDrawers()
+  }
+  else if(clickedLink === 'cantos') {
+    DRESSER.closeAllDrawers()
+    DRESSER.primaryDrawer.updateDrawerState(DrawerStatus.OPEN)
+  }
+}
 
 if(viewportHasBigBlackBars(viewer)){
   drawerBooks.updateDrawerState(DrawerStatus.OPEN, true);
