@@ -124,6 +124,7 @@ function Drawer(elDrawer) {
 
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 
+
 var viewer = OpenSeadragon({
     id: "osd-1",
     visibilityRatio: 1,
@@ -232,7 +233,7 @@ fetch(imageSchemaPath)
 
 
 function buildBookLinks(schemaBook){
-  const elTargetNav = document.querySelector(`[data-drawer="${schemaBook.name}"]`)
+  const elTargetNav = document.querySelector(`[data-drawer="${schemaBook.name}"] .drawer-contents`)
   schemaBook.cantos.forEach(canto => {
     const cantoLink = document.createElement("a")
     cantoLink.setAttribute("data-book", schemaBook.name)
@@ -251,7 +252,7 @@ function buildBookLinks(schemaBook){
     cantoLink.setAttribute("data-canto-versions", cantoVersionsString)
     const cantoName = document.createTextNode(canto.name)
     cantoLink.appendChild(cantoName)
-    cantoLink.addEventListener("click", setCanto)
+    cantoLink.addEventListener("click", handleCantoLinkClick)
 
     elTargetNav.appendChild(cantoLink)
   })
@@ -278,21 +279,31 @@ function openBookDrawer(event){
   targetDrawer.updateDrawerState(DrawerStatus.OPEN, false)
 }
 
-function setCanto(event) {
-  const clickedCanto = event.target
-  const book = clickedCanto.dataset.book
-  const canto = clickedCanto.dataset.canto
-  const versions = clickedCanto.dataset.cantoVersions.split(', ')
+function handleCantoLinkClick(event) {
+  const elCantoLink = event.target
+  const book = elCantoLink.dataset.book
+  const canto = elCantoLink.dataset.canto
+  const allVersions = elCantoLink.dataset.cantoVersions.split(', ')
 
-  const defaultVersion = versions.find((ver) => ver === 'smb')
-                      || versions.find((ver) => ver === 'facsimiles')
-                      || versions.find((ver) => ver === 'vat');
+  const defaultVersion = allVersions.find((ver) => ver === 'smb')
+                      || allVersions.find((ver) => ver === 'facsimiles')
+                      || allVersions.find((ver) => ver === 'vat');
 
   if(defaultVersion === undefined){
-    throw new Error("No version could be found for this canto")
+    throw new Error("No valid version could be found for this canto")
   }
 
-  viewer.open(`${DZ_URL_PREFIX}${defaultVersion}/${book}/${canto}.dzi`)
+  setCanto(book, canto, defaultVersion)
+}
+
+function setCanto(book, canto, ver) {
+  newCantoParams = new URLSearchParams([["book", book],
+                                        ["canto", canto],
+                                        ["ver", ver]])
+
+  history.pushState({}, `${book} ${canto}`, '?' + newCantoParams)
+  viewer.open(`${DZ_URL_PREFIX}${ver}/${book}/${canto}.dzi`)
+
   DRESSER.closeAllDrawers(false)
 }
 

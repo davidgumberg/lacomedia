@@ -18,16 +18,24 @@ html {
 body {
     background: rgb(255 234 200);
     font-family: Quattrocento;
-    height: 100%;
-    width: 100%;
+    position: absolute;
+    height: 100dvh;
+    width: 100dvw;
+
 }
 
 main {
-    width: 100dvw;
-    height: 100dvh;
+    width: 100%;
+    height: 100%;
 }
 
 main .viewer {
+    width: 100%;
+    height: 100%;
+}
+
+.dresser {
+    position: fixed;
     width: 100%;
     height: 100%;
 }
@@ -36,7 +44,6 @@ main .viewer {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
     height: 100%;
     width: 15vw;
 
@@ -50,21 +57,12 @@ main .viewer {
                 visibility linear 550ms;
 }
 
-.drawer-handle-container-visible {
-    visibility: visible;
-    transform: translateX(0) scaleX(1);
-}
-
-.drawer-handle-container-hidden {
-    visibility: hidden;
-    transform: translateX(-100%) scaleX(0.5);
-}
-
 .drawer-handle {
     height: 45%;
     cursor: pointer;
+    user-select: none;
 
-    transform: translateX(-100%) translateY(6%) scale(0.92);
+    transform: translateX(-100%) translateY(4%) scale(0.92);
     transition: transform 350ms var(--hand-timing),
                 filter 500ms var(--hand-timing),
                 visibility linear 550ms;
@@ -89,75 +87,134 @@ main .viewer {
 }
 
 .drawer {
-    position: fixed;
+    position: fixed; 
     top: 0;
-    left: 5vw;
     height: 100dvh;
+    left: 5dvw;
     display: flex;
-    flex-flow: column wrap;
-    max-width: 60rem;
+    flex-flow: column nowrap;
 
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-
-    justify-content: center;
-    font-size: 1.3rem;
-
-    gap: .2rem;
-    color: black;
     font-family: Quattrocento-stretched;
+    font-size: 1.1rem;
     font-weight: 900;
 
     transition: transform 400ms var(--hand-timing),
                 visibility linear 401ms;
-    
 }
 
-.drawer-books {
-    font-family: Quattrocento-stretched;
-    font-weight: 900;
+.drawer-headliner {
+    display: flex;
+    flex-flow: row wrap;
+
+    justify-content: flex-end;
+    gap: .6rem;
+
+    font-size: 3dvh;
+    margin-top: 1dvh;
+
+    cursor: pointer;
+
+}
+
+i {
+    transition: transform 220ms var(--hand-timing);
+}
+
+.drawer-headliner:hover > i {
+    transform:
+        scale(1.01)
+        translateX(-2.5%)
+        rotateX(3deg)
+        rotateY(1deg)
+        rotateZ(2deg);
+}
+
+.drawer-headliner h2 {
+    margin: auto;
+    transition: transform 220ms var(--hand-timing);
+}
+
+.drawer-headliner:hover > h2 {
+    transform: scale(1.02);
+}
+
+i[data-headliner="back-btn"] {
+    background: url(assets/finger.svg);
+    background-size: contain;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    height: 8dvh;
+    width: 20dvh;
+    margin-bottom: .6rem;
+}
+
+.drawer-contents {
+    flex: 1;
+
+    display: flex;
+    flex-flow: column wrap;
+
+    height: 89dvh;
+
+    gap: .2rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.drawer-books .drawer-contents {
+    font-size: 1.3rem;
+
+    /* flow must be switched for writing mode*/
     flex-flow: row wrap;
     writing-mode: vertical-lr;
     text-orientation: upright;
-    letter-spacing: .1rem;
+    letter-spacing: .08rem;
     line-height: 1.5;
 }
 
-.drawer a {
-    flex: 1;
+.drawer-contents a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     background: rgb(64 107 158 / 0.6);
-    /*
-    backdrop-filter: blur(2px);
-    */
-    box-shadow: -3px 1.1px 2px rgb(20 9 4 / 0.2);
+    
+    /* backdrop-filter: blur(2px); */
+    
+    flex: 1;
     border-radius: 2px;
     border: 1.5px solid rgb(250 240 240);
     max-height: 10dvh;
+    min-height: min-content;
 
     margin: .1rem 0.5rem;
 
     cursor: pointer;
     padding: .6rem 1rem;
     text-align: center;
+    vertical-align: middle;
 
-    transition: transform 300ms var(--hand-timing),
-                box-shadow 250ms linear,
-                background 200ms linear,
+    box-shadow: -3px 1.1px 2px rgb(20 9 4 / 0.2);
+    z-index: 1;
+
+    transition: transform 200ms var(--hand-timing),
+                box-shadow 150ms linear,
+                background 100ms linear,
                 z-index 150ms;
 
-    z-index: 1;
 }
 
-.drawer a:hover {
-    transform: translateX(6%) scale(1.07);
+.drawer-contents a:hover {
+    transform: translateX(3%) translateY(-1%) scale(1.04);
     background: rgb(79 122 173 / 0.6);
     box-shadow: -2.5px 0.8px 3px rgb(14 0 1 / 0.2);
     z-index: 2;
+
+    transition: transform 400ms var(--hand-timing),
+                box-shadow 350ms linear,
+                background 300ms linear;
 }
 
-.drawer-books a {
-    max-height: 100%;
-}
 
 .drawer-closed {
     visibility: hidden;
