@@ -87,8 +87,6 @@ main .viewer {
 }
 
 .drawer {
-    overflow: scroll;
-
     position: fixed; 
     top: 0;
     height: 100dvh;
@@ -155,11 +153,10 @@ i {
     display: flex;
     flex-flow: column wrap;
 
-    height: 89dvh;
-
-    gap: .2rem;
+    gap: .3rem;
     justify-content: center;
     margin-bottom: 1rem;
+    overflow: scroll;
 }
 
 .drawer-books .drawer-contents {
