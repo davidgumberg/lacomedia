@@ -123,6 +123,7 @@ function Drawer(elDrawer) {
 }
 
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
+// const DZ_URL_PREFIX = "images/"
 
 var viewer = OpenSeadragon({
     id: "osd-1",

@@ -21,7 +21,6 @@ body {
     position: absolute;
     height: 100dvh;
     width: 100dvw;
-
 }
 
 main {
@@ -34,14 +33,37 @@ main .viewer {
     height: 100%;
 }
 
-.dresser {
-    position: fixed;
+/*
+.closet {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: grid;
     width: 100%;
     height: 100%;
+    grid-template-areas:
+    "left-dresser blank blank"
+    "left-dresser blank controls";
+    grid-template-rows: 3fr
+                        1fr;
+
+    grid-template-columns: 
+}
+*/
+
+
+.dresser {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: min(18rem, 80dvw);
 }
 
+
 .drawer-handle-container {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     height: 100%;
@@ -52,9 +74,6 @@ main .viewer {
     justify-content: center;
     align-items: flex-start;
 
-    transition: transform 350ms var(--hand-timing),
-                filter 500ms var(--hand-timing),
-                visibility linear 550ms;
 }
 
 .drawer-handle {
@@ -87,10 +106,11 @@ main .viewer {
 }
 
 .drawer {
-    position: fixed; 
+    position: absolute; 
     top: 0;
     height: 100dvh;
-    left: 5dvw;
+    left: 5vw;
+    padding: 1dvh;
     display: flex;
     flex-flow: column nowrap;
 
@@ -104,13 +124,13 @@ main .viewer {
 
 .drawer-headliner {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
+    flex: 1;
 
     justify-content: flex-end;
     gap: .6rem;
 
     font-size: 3dvh;
-    margin-top: 1dvh;
 
     cursor: pointer;
 }
@@ -140,18 +160,19 @@ i {
 .back-btn {
     background: url(assets/finger.svg);
     background-size: contain;
-    background-position: bottom;
+    background-position: center;
     background-repeat: no-repeat;
-    height: 8dvh;
+    height: 100%;
     width: 20dvh;
     margin-bottom: .6rem;
 }
 
 .drawer-contents {
-    flex: 1;
+    flex: 7;
 
     display: flex;
     flex-flow: column wrap;
+    padding: 1dvh;
 
     gap: .3rem;
     justify-content: center;
@@ -188,8 +209,7 @@ i {
     
     flex: 1;
     border-radius: 2px;
-    border: 1.5px solid rgb(250 240 240);
-    max-height: 10dvh;
+    border: 1px solid rgb(0 0 0);
     min-height: min-content;
 
     margin: .1rem 0.5rem;
@@ -200,7 +220,7 @@ i {
     vertical-align: middle;
 
     box-shadow: -3px 1.1px 2px rgb(20 9 4 / 0.2);
-    z-index: 1;
+    z-index: 20;
 
     transition: transform 200ms var(--hand-timing),
                 box-shadow 150ms linear,
