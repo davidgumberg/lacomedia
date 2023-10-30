@@ -184,6 +184,29 @@ i {
     justify-content: center;
     margin-bottom: 1rem;
     overflow: scroll;
+
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+.drawer-contents {
+scrollbar-width: auto;
+scrollbar-color: #000000 rgb(0 0 0 / 0.0);
+}
+
+/*drawer-contents Chrome, Edge, and Safari */
+.drawer-contents::-webkit-scrollbar {
+width: 20px;
+}
+
+.drawer-contents::-webkit-scrollbar-track {
+background: rgb(0 0 0 / 0.0);
+}
+
+.drawer-contents::-webkit-scrollbar-thumb {
+background-color: #000000;
+border-radius: 10px;
+border: 4px solid #000000;
 }
 
 .drawer-books .drawer-contents {
