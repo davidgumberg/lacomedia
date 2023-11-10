@@ -29,7 +29,6 @@ function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer) {
   }
 
   this.handleFocusListener = function(_event){
-    console.log("handle focus here!")
     this.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
     this.primaryDrawer.updateDrawerState(DrawerStatus.OPEN)
   }
@@ -168,7 +167,6 @@ elParadisoLink.addEventListener  ("click", openBookDrawer)
 
 const elsBackBtn = document.querySelectorAll('a.drawer-headliner')
 elsBackBtn.forEach( (backBtn) => {
-  console.log(backBtn)
   backBtn.addEventListener("click", backBtnClickHandler)
 })
 
