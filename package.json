@@ -1,0 +1,14 @@
+{
+  "name": "lacomedia",
+  "module": "js/index.js",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "bun build ./js/index.js --outdir ./build"
+  }
+}

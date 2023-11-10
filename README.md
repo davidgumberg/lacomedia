@@ -11,6 +11,11 @@ DeepZoom files, described by JSON. I am looking for a good way to host this larg
 numbered (~60,000 files) fileset freely for others to set up their own instances, but until then
 you should visit my instance at [https://davidgumberg.github.io/lacomedia/](https://davidgumberg.github.io/lacomedia/)
 
+But otherwise,
+`bun run build`
+and start any static http server in the repo directory, for example
+`python -m http.server`
+
 ## Copyright and Image Sources
 - Nearly all of the illustrations come from Staatliche Museen zu Berlin, which has generously donated their images
 to the Public Domain with the Creative Commons PDM 1.0, and made [available online.](https://recherche.smb.museum/)
