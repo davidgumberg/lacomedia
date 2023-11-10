@@ -3,6 +3,7 @@ import OpenSeadragon from 'openseadragon'
 
 // Import annotorious and CSS
 import * as Annotorious from '@recogito/annotorious-openseadragon'
+import BetterPolygon from '@recogito/annotorious-better-polygon'
 
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 // const DZ_URL_PREFIX = "images/"
@@ -23,6 +24,9 @@ var viewer = OpenSeadragon({
 });
 
 const anno = Annotorious.default(viewer, {});
+BetterPolygon(anno);
+
+anno.setDrawingTool('polygon')
 
 const elDrawerBooks = document.querySelector('[data-drawer="books"]')
 const elDrawerInferno = document.querySelector ('[data-drawer="inferno"]')
