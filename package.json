@@ -12,6 +12,7 @@
     "build": "bun build ./js/index.js --outdir ./build"
   },
   "dependencies": {
+    "@recogito/annotorious-openseadragon": "^2.7.15",
     "openseadragon": "^4.1.0"
   }
 }
