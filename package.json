@@ -10,5 +10,8 @@
   },
   "scripts": {
     "build": "bun build ./js/index.js --outdir ./build"
+  },
+  "dependencies": {
+    "openseadragon": "^4.1.0"
   }
 }
