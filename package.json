@@ -9,7 +9,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "build": "bun build ./js/index.js --outdir ./build"
+    "build": "bun build ./js/index.js --outdir ./build",
+    "watch": "bun build ./js/index.js --outdir ./build --watch"
   },
   "dependencies": {
     "@recogito/annotorious-better-polygon": "^0.2.0",
