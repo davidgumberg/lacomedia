@@ -1,0 +1,29 @@
+.toolbox {
+	z-index: 1;
+	position: fixed;
+
+	bottom: 1%;
+	right: 2%;
+
+	font-size: 3rem;
+
+}
+
+.toolbox-handle {
+	display: flex;
+	align-items: flex-end;
+	gap: 1.5rem;
+	height: 50dvh;
+}
+
+.toolbox-handle-button {
+	cursor: pointer;
+}
+
+.toolbox-handle-closed {
+	visibility: hidden;
+}
+
+.toolbox-handle-open {
+	visibility: visible;
+}
