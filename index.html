@@ -12,11 +12,10 @@
 </head>
 <body>
   <main>
-    <section id="osd-1" class="viewer">
-    </section>
+    <section id="osd-element" class="viewer"></section>
     <div class="closet">
       <section class="dresser">
-        <section class="drawer-handle-container" data-drawer="container" >
+        <section class="drawer-handle-container" data-drawer="container">
           <img src="assets/circle-rh.svg" class="drawer-handle" data-drawer="handle" tabindex="0" draggable="false" />
         </section>
         <nav class="drawer drawer-books drawer-closed" data-drawer="books">
@@ -53,17 +52,19 @@
       </section>
     </div>
     <section class="toolbox">
-      <nav class="toolbox-handle toolbox-handle-open">
-        <div class="toolbox-handle-button">
+      <div class="toolbox-handle toolbox-handle-open">
+        <div class="toolbox-handle-button" data-toolbox="prev-btn">
           ⬅
         </div>
-        <div class="toolbox-handle-button">
+        <div class="toolbox-handle-button" data-toolbox="next-btn">
           ➡
         </div>
-        <div class="toolbox-handle-button">
-          ⚙️
-        </div>
-      </nav>
+        <menu class="toolbox-tools toolbox-tools-closed">
+          <li class="toolbox-tools-btn toolbox-tools-open-btn">⚙️</li>
+          <li class="toolbox-tools-btn toolbox-tools-save-annotations">🐏</li>
+          <li class="toolbox-tools-btn toolbox-tools-save-image">💾</li>
+        </menu>
+      </div>
     </section>
   </main>
 

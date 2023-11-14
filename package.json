@@ -2,15 +2,15 @@
   "name": "lacomedia",
   "module": "js/index.js",
   "type": "module",
+  "scripts": {
+    "build": "bun build ./js/index.js --outdir ./build",
+    "watch": "bun build ./js/index.js --outdir ./build --watch --sourcemap=external"
+  },
   "devDependencies": {
     "bun-types": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  },
-  "scripts": {
-    "build": "bun build ./js/index.js --outdir ./build",
-    "watch": "bun build ./js/index.js --outdir ./build --watch"
   },
   "dependencies": {
     "@recogito/annotorious-better-polygon": "^0.2.0",

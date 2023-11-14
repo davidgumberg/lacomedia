@@ -4,7 +4,6 @@
 
 	bottom: 1%;
 	right: 2%;
-
 	font-size: 3rem;
 
 }
@@ -27,3 +26,30 @@
 .toolbox-handle-open {
 	visibility: visible;
 }
+
+.toolbox-tools {
+	display: flex;
+	flex-flow: column nowrap;
+	gap: 1.2rem;
+}
+
+.toolbox-tools-btn {
+	cursor: pointer;
+}
+
+.toolbox-tools-open .toolbox-tools-btn {
+	visibility: visible;
+	display: block;
+}
+
+.toolbox-tools-closed .toolbox-tools-btn {
+	visibility: hidden;
+	display: none;
+}
+
+
+.toolbox-tools-closed .toolbox-tools-btn.toolbox-tools-open-btn {
+	visibility: visible;
+	display: block;
+}
+

@@ -1,32 +1,9 @@
 import { Dresser, Drawer, DrawerStatus, DrawerHandleStatus } from './dresser.js'
-import OpenSeadragon from 'openseadragon'
-
-// Import annotorious and CSS
-import * as Annotorious from '@recogito/annotorious-openseadragon'
-import BetterPolygon from '@recogito/annotorious-better-polygon'
+import { Viewer } from './viewer.js'
+import { Toolbox } from './toolbox.js'
 
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 // const DZ_URL_PREFIX = "images/"
-
-var viewer = OpenSeadragon({
-    id: "osd-1",
-    visibilityRatio: 1,
-    minZoomImageRatio: 1,
-    maxZoomPixelRatio: 42,
-    subPixelRoundingForTransparency: 2,
-    prefixUrl: "/openseadragon/images/",
-    tileSources: DZ_URL_PREFIX + "smb/inferno/VIII.dzi",
-    showNavigationControl: false,
-    gestureSettingsMouse: {
-        clickToZoom: false,
-        dblClickToZoom: true,
-    },
-});
-
-const anno = Annotorious.default(viewer, {});
-BetterPolygon(anno);
-
-anno.setDrawingTool('polygon')
 
 const elDrawerBooks = document.querySelector('[data-drawer="books"]')
 const elDrawerInferno = document.querySelector ('[data-drawer="inferno"]')
@@ -43,8 +20,8 @@ const allDrawers = [drawerBooks, drawerInferno, drawerPurgatorio, drawerParadiso
 const elHandleContainer = document.querySelector('[data-drawer="container"]')
 const elHandle = document.querySelector('[data-drawer="handle"]')
 
-const DRESSER = new Dresser(allDrawers, elHandle, elHandleContainer, elDrawerBooks)
-DRESSER.addEventListeners()
+const dresser = new Dresser(allDrawers, elHandle, elHandleContainer, elDrawerBooks)
+dresser.addEventListeners()
 
 const elInfernoLink = document.querySelector ('[data-book-link="inferno"]')
 const elPurgatorioLink = document.querySelector('[data-book-link="purgatorio"]')
@@ -54,6 +31,28 @@ elInfernoLink.addEventListener   ("click", openBookDrawer)
 elPurgatorioLink.addEventListener("click", openBookDrawer)
 elParadisoLink.addEventListener  ("click", openBookDrawer)
 
+const viewer = new Viewer(dresser)
+
+const toolbox = new Toolbox(document.querySelector('section.toolbox'), viewer)
+toolbox.addEventListeners()
+
+if(viewer.hasBigBlackBars()){
+  drawerBooks.updateDrawerState(DrawerStatus.OPEN, true);
+}
+
+const debouncedOsdAnimationHandler = debounce(osdAnimationHandler)
+
+viewer.osd.addHandler("animation", (event) => {
+  debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 100}, event)
+}, { eventType: "animation" })
+
+//viewer.osd.addHandler("animation-start", osdAnimationHandler, { eventType: "animation-start" });
+viewer.osd.addHandler("canvas-scroll", osdAnimationHandler, { eventType: "animation-start" });
+viewer.osd.addHandler("canvas-click", osdAnimationHandler, { eventType: "animation-start" });
+viewer.osd.addHandler("animation-finish", (event) => {
+  debouncedOsdAnimationHandler({leading: false, trailing: true, delay: 200}, event)
+}, { eventType: "animation-finish" })
+
 const elsBackBtn = document.querySelectorAll('a.drawer-headliner')
 elsBackBtn.forEach( (backBtn) => {
   backBtn.addEventListener("click", backBtnClickHandler)
@@ -62,105 +61,39 @@ elsBackBtn.forEach( (backBtn) => {
 function backBtnClickHandler(event){
   clickedLink = event.currentTarget.dataset.headliner
   if(clickedLink === 'books'){
-    DRESSER.closeAllDrawers()
+    dresser.closeAllDrawers()
   }
   else if(clickedLink === 'cantos') {
-    DRESSER.closeAllDrawers()
-    DRESSER.primaryDrawer.updateDrawerState(DrawerStatus.OPEN)
+    dresser.closeAllDrawers()
+    dresser.primaryDrawer.updateDrawerState(DrawerStatus.OPEN)
   }
 }
-
-if(viewportHasBigBlackBars(viewer)){
-  drawerBooks.updateDrawerState(DrawerStatus.OPEN, true);
-}
-
-const debouncedOsdAnimationHandler = debounce(osdAnimationHandler)
-
-viewer.addHandler("animation", (event) => {
-  debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 100}, event)
-}, { eventType: "animation" })
-
-//viewer.addHandler("animation-start", osdAnimationHandler, { eventType: "animation-start" });
-viewer.addHandler("canvas-scroll", osdAnimationHandler, { eventType: "animation-start" });
-viewer.addHandler("canvas-click", osdAnimationHandler, { eventType: "animation-start" });
-viewer.addHandler("animation-finish", (event) => {
-  debouncedOsdAnimationHandler({leading: false, trailing: true, delay: 200}, event)
-}, { eventType: "animation-finish" })
 
 function osdAnimationHandler(event) {
   const evType = event.userData.eventType
 
-  if(!DRESSER.isAnyDrawerOpen() && viewportHasBigBlackBars(viewer)){
+  if(!dresser.isAnyDrawerOpen() && viewer.hasBigBlackBars()){
     // this is a bad way to go about resetting the timer, 
     // need some kind of an animation queue for the dresser
     clearTimeout(debouncedOsdAnimationHandler.timer)
-    DRESSER.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
-    DRESSER.primaryDrawer.updateDrawerState(DrawerStatus.OPEN, true);
+    dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
+    dresser.primaryDrawer.updateDrawerState(DrawerStatus.OPEN, true);
   }
-  else if(DRESSER.isAnyDrawerOpen() && !viewportHasBigBlackBars(viewer) &&
-         (evType === 'animation-start' || DRESSER.primaryDrawer.wasAutoToggled === true)) {
-    DRESSER.closeAllDrawers()
+  else if(dresser.isAnyDrawerOpen() && !viewer.hasBigBlackBars() &&
+         (evType === 'animation-start' || dresser.primaryDrawer.wasAutoToggled === true)) {
+    dresser.closeAllDrawers()
   }
          
   if(evType === 'animation'){
-    DRESSER.updateDrawerHandleState(DrawerHandleStatus.PEEKING)
+    dresser.updateDrawerHandleState(DrawerHandleStatus.PEEKING)
   }
 
   if(evType === 'animation-finish' &&
-     !(DRESSER.elHandleContainer.matches(':hover') || DRESSER.elHandle.matches(':hover'))) {
-    DRESSER.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
+     !(dresser.elHandleContainer.matches(':hover') || dresser.elHandle.matches(':hover'))) {
+    dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
   }
 }
 
-function viewportHasBigBlackBars(viewer) {
-  const viewportWidth = viewer.viewport.getBounds().width
-  if(viewportWidth >= 1.05){
-    return true
-  }
-  else {
-    return false
-  }
-}
-
-const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
-
-let imageSchemaJSON
-fetch(imageSchemaPath)
-  .then(response => response.json())
-  .then(data => {
-    imageSchemaJSON = data;
-    imageSchemaJSON.books.forEach(buildBookLinks)
-  })
-  .catch(error => {
-    console.error('Error loading image schema:', error);
-  });
-
-
-function buildBookLinks(schemaBook){
-  const elTargetNav = document.querySelector(`[data-drawer="${schemaBook.name}"] .drawer-contents`)
-  schemaBook.cantos.forEach(canto => {
-    const cantoLink = document.createElement("a")
-    cantoLink.setAttribute("data-book", schemaBook.name)
-    cantoLink.setAttribute("data-canto", canto.name)
-
-    const cantoVersionsString = canto.versions.reduce((acc, curr) => {
-      // initial iteration
-      if (acc === ""){
-        return curr.name
-      }
-      else {
-        return acc + ", " + curr.name
-      }
-    }, "")
-      
-    cantoLink.setAttribute("data-canto-versions", cantoVersionsString)
-    const cantoName = document.createTextNode(canto.name)
-    cantoLink.appendChild(cantoName)
-    cantoLink.addEventListener("click", handleCantoLinkClick)
-
-    elTargetNav.appendChild(cantoLink)
-  })
-}
 
 function openBookDrawer(event){
   const clickedBook = event.target
@@ -176,42 +109,12 @@ function openBookDrawer(event){
     case 'paradiso':
       targetDrawer = drawerParadiso
       break;
-
   }
 
-  DRESSER.closeAllDrawers(false)
+  dresser.closeAllDrawers(false)
   targetDrawer.updateDrawerState(DrawerStatus.OPEN, false)
 }
 
-function handleCantoLinkClick(event) {
-  const elCantoLink = event.target
-  const book = elCantoLink.dataset.book
-  const canto = elCantoLink.dataset.canto
-  const allVersions = elCantoLink.dataset.cantoVersions.split(', ')
-
-  const defaultVersion = allVersions.find((ver) => ver === 'smb')
-                      || allVersions.find((ver) => ver === 'facsimiles')
-                      || allVersions.find((ver) => ver === 'vat');
-
-  if(defaultVersion === undefined){
-    throw new Error("No valid version could be found for this canto")
-  }
-
-  setCanto(book, canto, defaultVersion)
-}
-
-function setCanto(book, canto, ver) {
-  newCantoParams = new URLSearchParams([["book", book],
-                                        ["canto", canto],
-                                        ["ver", ver]])
-
-  history.pushState({}, `${book} ${canto}`, '?' + newCantoParams)
-  viewer.open(`${DZ_URL_PREFIX}${ver}/${book}/${canto}.dzi`)
-
-  DRESSER.closeAllDrawers(false)
-}
-
-/* hoping to use this later... */
 function debounce(func) {
   let timer = null
   let trailingArgs = null

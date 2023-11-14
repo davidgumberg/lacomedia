@@ -1,5 +1,6 @@
 html {
   box-sizing: border-box;
+  user-select: none;
 }
 
 * {
@@ -8,6 +9,7 @@ html {
 
 *, *:before, *:after {
   box-sizing: inherit;
+
 }
 
 body {

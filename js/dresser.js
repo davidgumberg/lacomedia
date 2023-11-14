@@ -18,7 +18,7 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
   this.elHandleContainer = elDrawerHandleContainer
   this.elDrawerBooks = elDrawerBooks
 
-  this.primaryDrawer = allDrawers.find((drawer) => drawer.name === 'books')
+  this.primaryDrawer = this.drawers.find((drawer) => drawer.name === 'books')
 
   this.closeAllDrawers = function(wasAuto = false){
     this.drawers.forEach(drawer => {
@@ -76,6 +76,7 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
         break;
     }
   }
+
 }
 
 export function Drawer(elDrawer) {
@@ -121,4 +122,8 @@ export function Drawer(elDrawer) {
     }
     return true;
   }
+}
+
+export function BookDrawer(elDrawer) {
+  Object.setPrototypeOf(this, Drawer)
 }
