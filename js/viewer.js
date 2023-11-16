@@ -4,6 +4,10 @@ import OpenSeadragon from 'openseadragon'
 import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
 
+import { TitleFormatter, TitleWidget } from './annotorious-widgets'
+
+import SequenceModePlugin from './sequence-mode-plugin'
+
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
 
@@ -36,7 +40,18 @@ export class Viewer{
         console.error('Error loading image schema:', error);
       });
 
-    this.anno = Annotorious.default(this.osd, {});
+    this.anno = Annotorious.default(this.osd, {
+      widgets: [
+        TitleWidget
+      ],
+      formatter: TitleFormatter
+    });
+
+    fetch(`${window.location.origin}/assets/annotations.json`)
+      .then(response => response.json())
+      .then(data => {
+        SequenceModePlugin(this.anno, this, {pagedAnnotations: data})
+      })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
   }

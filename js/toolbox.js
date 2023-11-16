@@ -52,7 +52,7 @@ export class Toolbox {
   }
 
   async saveAnnotationsListener(_event) {
-    const blob = new Blob([JSON.stringify(this._viewer.anno.getAnnotations())], {
+    const blob = new Blob([JSON.stringify(this._viewer.anno.getAllAnnotations())], {
       type: 'text/plain'
     });
     const blobUrl = URL.createObjectURL(blob)

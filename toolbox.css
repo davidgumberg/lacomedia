@@ -1,3 +1,5 @@
+
+
 .toolbox {
 	z-index: 1;
 	position: fixed;
@@ -6,6 +8,11 @@
 	right: 2%;
 	font-size: 3rem;
 
+	pointer-events: none;
+}
+
+.toolbox * {
+	pointer-events: auto;;
 }
 
 .toolbox-handle {
@@ -52,4 +59,6 @@
 	visibility: visible;
 	display: block;
 }
+
+
 

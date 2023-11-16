@@ -1,0 +1,31 @@
+#osd-element .a9s-inner {
+	fill: rgb(12 40 200 / 0.1);
+}
+
+#osd-element .r6o-editor {
+	width: fit-content;
+}
+
+#osd-element .r6o-editor-inner {
+
+}
+
+.r6o-editor-inner > .widget {
+	width: fit-content;
+}
+
+.annotation-widget-container {
+	display: flex;
+	padding: 1rem;
+	gap: 1rem;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.annotation-widget-verse {
+	background-color: rgb(240 240 240);
+	width: 100%;
+	padding: 1rem;
+	white-space: pre;
+}

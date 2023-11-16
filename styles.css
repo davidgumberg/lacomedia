@@ -20,7 +20,7 @@ body {
     font-family: Quattrocento;
     position: absolute;
     height: 100dvh;
-    width: 100dvw;
+    width: 100dvw;it
 }
 
 main {
@@ -200,6 +200,10 @@ width: 20px;
 }
 
 .drawer-contents::-webkit-scrollbar-track {
+background: rgb(0 0 0 / 0.0);
+}
+
+.drawer-contents::-webkit-scrollbar-corner {
 background: rgb(0 0 0 / 0.0);
 }
 
