@@ -30,7 +30,6 @@ export class Toolbox {
   }
 
   toggleToolboxTools() {
-    console.log("helloo")
     if(this.elToolboxTools.classList.contains('toolbox-tools-open')){
       this.setToolboxToolsState(ToolboxToolsStatus.CLOSED)
     }

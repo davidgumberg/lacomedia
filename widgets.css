@@ -28,4 +28,27 @@
 	width: 100%;
 	padding: 1rem;
 	white-space: pre;
+	
+	counter-reset: line;
+}
+
+.annotation-widget-verse br {
+	counter-increment: line;
+}
+
+.annotation-widget-verse br:before {
+	content: counter(line);
+	padding-right: .5rem;
+	background: rgb(220 220 220 / 0.4);
+}
+
+.cite-widget-container {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 1rem;
+}
+
+.cite-widget-input-container {
+	display: flex;
+	flex-flow: column nowrap;
 }

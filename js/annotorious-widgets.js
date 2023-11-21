@@ -1,5 +1,5 @@
 export function TitleWidget(args) {
-  const currentTitleBody = args.annotation ?
+  const currentCiteBody = args.annotation ?
     args.annotation.bodies.find(function(b) {
       return b.purpose == 'describing'
     }) : null;
@@ -9,7 +9,7 @@ export function TitleWidget(args) {
       return b.purpose == 'linking'
     }) : null;
 
-  const currentTitleValue = currentTitleBody ? currentTitleBody.value : null
+  const currentCiteValue = currentCiteBody ? currentCiteBody.value : null
   const currentVerseValue = currentVerseBody ? currentVerseBody.value : null
 
   this.updateTitle = function(event) {
@@ -25,6 +25,23 @@ export function TitleWidget(args) {
         type: 'TextualBody',
         purpose: 'describing',
         value: event.target.value
+      });
+    }
+  }
+  
+  this.updateCite = function(_event, inputs) {
+    if (currentCiteBody) {
+      args.onUpdateBody(currentCiteBody, {
+        type: 'TextualBody',
+        purpose: 'describing',
+        value: inputs 
+      });
+    }
+    else { 
+      args.onAppendBody({
+        type: 'TextualBody',
+        purpose: 'describing',
+        value: inputs 
       });
     }
   }
@@ -61,8 +78,90 @@ export function TitleWidget(args) {
     return titleWidget
   }
 
+  this.citeWidget = function() {
+    const citeWidget = document.createElement('div')
+    citeWidget.classList.add("cite-widget-container")
+
+    const bookSelect = document.createElement('select')
+    bookSelect.name = "book"
+    const bookSelectLabel = document.createElement("label")
+    bookSelectLabel.for = "book"
+    bookSelectLabel.textContent = "Book"
+
+    bookSelect.add(new Option('Inferno', 'inferno'))
+    bookSelect.add(new Option('Purgatorio', 'purgatorio'))
+    bookSelect.add(new Option('Paradiso', 'paradiso'))
+
+    bookSelect.value = currentCiteValue.book || "inferno"
+
+    const bookSelectContainer = document.createElement('div')
+    bookSelectContainer.classList.add("cite-widget-input-container")
+    bookSelectContainer.appendChild(bookSelectLabel)
+    bookSelectContainer.appendChild(bookSelect)
+    citeWidget.appendChild(bookSelectContainer)
+
+    const cantoInputLabel = document.createElement('label')
+    cantoInputLabel.for = "canto"
+    cantoInputLabel.textContent = "Canto"
+    const cantoInput= document.createElement('input')
+    cantoInput.name = "canto"
+    cantoInput.type = "text"
+    cantoInput.size = "10"
+    cantoInput.value = currentCiteValue.canto || ""
+
+
+    const cantoInputContainer = document.createElement('div')
+    cantoInputContainer.classList.add("cite-widget-input-container")
+    cantoInputContainer.appendChild(cantoInputLabel)
+    cantoInputContainer.appendChild(cantoInput)
+
+    citeWidget.appendChild(cantoInputContainer)
+
+    const firstLineInputLabel = document.createElement('label')
+    firstLineInputLabel.for = "first-line"
+    firstLineInputLabel.textContent = "First Line"
+
+    const firstLineInput = document.createElement('input')
+    firstLineInput.type = "number"
+    firstLineInput.size = "4"
+    firstLineInput.value = currentCiteValue.firstLine || ""
+
+    const firstLineInputContainer = document.createElement("div")
+    firstLineInputContainer.classList.add("cite-widget-input-container")
+    firstLineInputContainer.appendChild(firstLineInputLabel)
+    firstLineInputContainer.appendChild(firstLineInput)
+    
+    citeWidget.appendChild(firstLineInputContainer)
+
+    const lastLineInputLabel = document.createElement('label')
+    lastLineInputLabel.for = "last-line"
+    lastLineInputLabel.textContent = "Last Line"
+
+    const lastLineInput= document.createElement('input')
+    lastLineInput.type = "number"
+    lastLineInput.size = "4"
+    lastLineInput.value = currentCiteValue.lastLine || ""
+
+    const lastLineInputContainer = document.createElement("div")
+    lastLineInputContainer.classList.add("cite-widget-input-container")
+    lastLineInputContainer.appendChild(lastLineInputLabel)
+    lastLineInputContainer.appendChild(lastLineInput)
+    citeWidget.appendChild(lastLineInputContainer)
+
+    citeWidget.addEventListener('change', (event) => {
+      this.updateCite(event, {
+        book: bookSelect.value,
+        canto: cantoInput.value,
+        firstLine: firstLineInput.value,
+        lastLine: lastLineInput.value
+      })
+    });
+
+    return citeWidget
+  }
+
   this.italianVerseWidget = function() {
-    const verseWidget = document.createElement('span')
+    const verseWidget = document.createElement('pre')
     verseWidget.className = "annotation-widget-verse"
     verseWidget.role = "textbox"
     verseWidget.innerHTML = currentVerseValue
@@ -75,15 +174,18 @@ export function TitleWidget(args) {
   const AnnotationWidgetContainer= document.createElement('div');
   AnnotationWidgetContainer.className = 'annotation-widget-container';
 
-  AnnotationWidgetContainer.appendChild(this.titleWidget())
+  AnnotationWidgetContainer.appendChild(this.citeWidget())
   AnnotationWidgetContainer.appendChild(this.italianVerseWidget())
   
   return AnnotationWidgetContainer;
 }
 
 export function TitleFormatter(annotation) {
+/*
   const currentTitleBody = annotation.bodies.find(function(b) { return b.purpose == 'describing' })
   const currentTitleValue = currentTitleBody ? currentTitleBody.value : null
 
   return currentTitleValue
+*/
+  return "eek"
 }

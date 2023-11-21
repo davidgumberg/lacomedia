@@ -54,6 +54,7 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
+    this.anno.on
   }
 
   imagePath() {
