@@ -82,10 +82,10 @@ export function CiteWidget(args) {
     cantoInputLabel.textContent = "Canto"
     const cantoInput= document.createElement('input')
     cantoInput.name = "canto"
+    cantoInput.required = true
     cantoInput.type = "text"
     cantoInput.size = "10"
     cantoInput.value = currentCiteValue.canto || ""
-
 
     const cantoInputContainer = document.createElement('div')
     cantoInputContainer.classList.add("cite-widget-input-container")
@@ -99,6 +99,7 @@ export function CiteWidget(args) {
     firstLineInputLabel.textContent = "First Line"
 
     const firstLineInput = document.createElement('input')
+    firstLineInput.required = true
     firstLineInput.type = "number"
     firstLineInput.size = "4"
     firstLineInput.value = currentCiteValue.firstLine || ""
@@ -115,6 +116,7 @@ export function CiteWidget(args) {
     lastLineInputLabel.textContent = "Last Line"
 
     const lastLineInput= document.createElement('input')
+    lastLineInput.required = true
     lastLineInput.type = "number"
     lastLineInput.size = "4"
     lastLineInput.value = currentCiteValue.lastLine || ""
