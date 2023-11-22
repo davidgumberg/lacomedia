@@ -1,4 +1,4 @@
-export function TitleWidget(args) {
+export function CiteWidget(args) {
   const currentCiteBody = args.annotation ?
     args.annotation.bodies.find(function(b) {
       return b.purpose == 'describing'
@@ -12,23 +12,6 @@ export function TitleWidget(args) {
   const currentCiteValue = currentCiteBody ? currentCiteBody.value : null
   const currentVerseValue = currentVerseBody ? currentVerseBody.value : null
 
-  this.updateTitle = function(event) {
-    if (currentTitleBody) {
-      args.onUpdateBody(currentTitleBody, {
-        type: 'TextualBody',
-        purpose: 'describing',
-        value: event.target.value
-      });
-    }
-    else { 
-      args.onAppendBody({
-        type: 'TextualBody',
-        purpose: 'describing',
-        value: event.target.value
-      });
-    }
-  }
-  
   this.updateCite = function(_event, inputs) {
     if (currentCiteBody) {
       args.onUpdateBody(currentCiteBody, {

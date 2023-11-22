@@ -4,7 +4,7 @@ import OpenSeadragon from 'openseadragon'
 import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
 
-import { TitleFormatter, TitleWidget } from './annotorious-widgets'
+import { TitleFormatter, CiteWidget } from './annotorious-widgets'
 
 import SequenceModePlugin from './sequence-mode-plugin'
 
@@ -42,7 +42,7 @@ export class Viewer{
 
     this.anno = Annotorious.default(this.osd, {
       widgets: [
-        TitleWidget
+        CiteWidget
       ],
       formatter: TitleFormatter
     });

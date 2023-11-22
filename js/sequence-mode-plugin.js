@@ -59,8 +59,6 @@ const SequenceModePlugin = (anno, viewer, opts={}) => {
 
   viewer.osd.addHandler('open', () => {
     // const tileSourceURL = viewer.osd.world.getItemAt(0).source.url;
-
-    console.log(currentPage())
     anno.setAnnotations(Object.values(pagedAnnotations[currentPage()] || {}));
   });
 

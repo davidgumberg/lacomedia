@@ -1,6 +1,7 @@
 import { Dresser, Drawer, DrawerStatus, DrawerHandleStatus } from './dresser.js'
 import { Viewer } from './viewer.js'
 import { Toolbox } from './toolbox.js'
+import { LaComediaText } from './text.js'
 
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 // const DZ_URL_PREFIX = "images/"
@@ -93,7 +94,6 @@ function osdAnimationHandler(event) {
     dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
   }
 }
-
 
 function openBookDrawer(event){
   const clickedBook = event.target
