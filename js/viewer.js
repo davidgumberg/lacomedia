@@ -5,8 +5,12 @@ import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
 
 import { TitleFormatter, CiteWidget } from './annotorious-widgets'
+import { LaComediaText } from './text.js'
 
 import SequenceModePlugin from './sequence-mode-plugin'
+
+import { DrawerHandleStatus, DrawerStatus } from './dresser'
+import { debounce } from './util'
 
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
@@ -29,6 +33,8 @@ export class Viewer{
           dblClickToZoom: true,
       },
     });
+
+    this.addEventListeners()
 
     fetch(imageSchemaPath)
       .then(response => response.json())
@@ -54,13 +60,11 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
-    this.anno.on
   }
 
   imagePath() {
     return(`${DZ_URL_PREFIX}${this.image.ver}/${this.image.book}/${this.image.canto}.dzi`)
   }
-
 
   setCanto(book, canto, ver = undefined) {
     if(ver === undefined){
@@ -174,6 +178,24 @@ export class Viewer{
     })
   }
 
+  addEventListeners() {
+    this.debouncedOsdAnimationHandler = debounce(this._osdAnimationHandler.bind(this))
+
+    this.osd.addHandler("animation", (event) => {
+      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 100}, event)
+    }, { eventType: "animation" })
+
+    this.osd.addHandler("animation-finish", (event) => {
+      this.debouncedOsdAnimationHandler({leading: false, trailing: true, delay: 200}, event)
+    }, { eventType: "animation-finish" })
+
+    this.osd.addHandler("canvas-click", (event) => {
+      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 0}, event)
+    }, { eventType: "animation-start" });
+
+    //this.osd.addHandler("canvas-scroll", this._osdAnimationHandler, { eventType: "animation-start" });
+  }
+
   _handleCantoLinkClick(event) {
     const elCantoLink = event.target
     const book = elCantoLink.dataset.book
@@ -187,5 +209,30 @@ export class Viewer{
 
     this.setCanto(book, canto, defaultVersion)
     this.dresser.closeAllDrawers(false)
+  }
+
+  _osdAnimationHandler(event) {
+    const evType = event.userData.eventType
+
+    if(!this.dresser.isAnyDrawerOpen() && this.hasBigBlackBars()){
+      // this is a bad way to go about resetting the timer, 
+      // need some kind of an animation queue for the dresser
+      clearTimeout(this.debouncedOsdAnimationHandler.timer)
+      this.dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
+      this.dresser.primaryDrawer.updateDrawerState(DrawerStatus.OPEN, true);
+    }
+    else if(this.dresser.isAnyDrawerOpen() && !this.hasBigBlackBars() &&
+           (evType === 'animation-start' || this.dresser.primaryDrawer.wasAutoToggled === true)) {
+      this.dresser.closeAllDrawers()
+    }
+           
+    if(evType === 'animation'){
+      this.dresser.updateDrawerHandleState(DrawerHandleStatus.PEEKING)
+    }
+
+    if(evType === 'animation-finish' &&
+       !(this.dresser.elHandleContainer.matches(':hover') || this.dresser.elHandle.matches(':hover'))) {
+      this.dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
+    }
   }
 }

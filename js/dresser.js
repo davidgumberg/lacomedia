@@ -76,7 +76,6 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
         break;
     }
   }
-
 }
 
 export function Drawer(elDrawer) {
