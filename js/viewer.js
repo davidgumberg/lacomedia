@@ -48,7 +48,7 @@ export class Viewer{
 
     this.anno = Annotorious.default(this.osd, {
       widgets: [
-        CiteWidget
+        { widget: CiteWidget, viewer: this }
       ],
       formatter: TitleFormatter
     });
@@ -60,6 +60,7 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
+    this.textEn = new LaComediaText(`${window.location.origin}/assets/eng.html`)
   }
 
   imagePath() {

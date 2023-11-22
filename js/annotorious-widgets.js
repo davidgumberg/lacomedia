@@ -1,4 +1,7 @@
+import { LaComediaText } from "./text";
+
 export function CiteWidget(args) {
+  const viewer = args.viewer
   const currentCiteBody = args.annotation ?
     args.annotation.bodies.find(function(b) {
       return b.purpose == 'describing'
@@ -50,15 +53,6 @@ export function CiteWidget(args) {
 
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(range);
-  }
-
-  this.titleWidget = function() {
-    const titleWidget = document.createElement('input')
-    titleWidget.type = "text"
-    titleWidget.value = currentTitleValue
-
-    titleWidget.addEventListener('change', this.updateTitle)
-    return titleWidget
   }
 
   this.citeWidget = function() {
@@ -145,12 +139,18 @@ export function CiteWidget(args) {
 
   this.italianVerseWidget = function() {
     const verseWidget = document.createElement('pre')
-    verseWidget.className = "annotation-widget-verse"
-    verseWidget.role = "textbox"
-    verseWidget.innerHTML = currentVerseValue
-    verseWidget.contentEditable = true
+    //verseWidget.className = "annotation-widget-verse"
+    //verseWidget.role = "textbox"
+    //verseWidget.contentEditable = true
+    console.log(currentCiteValue)
+    lines = viewer.textEn.getLines(currentCiteValue?.book,
+                                   currentCiteValue?.canto,
+                                   currentCiteValue?.firstLine,
+                                   currentCiteValue?.lastLine)
+    
+    verseWidget.innerHTML = lines.join('\n')
 
-    verseWidget.addEventListener('blur', this.updateVerse)
+    //verseWidget.addEventListener('blur', this.updateVerse)
     return verseWidget
   }
 
