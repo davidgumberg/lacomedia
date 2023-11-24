@@ -13,7 +13,6 @@ export function CiteWidget(args) {
     }) : null;
 
   const currentCiteValue = currentCiteBody ? currentCiteBody.value : null
-  const currentVerseValue = currentVerseBody ? currentVerseBody.value : null
 
   this.updateCite = function(_event, inputs) {
     if (currentCiteBody) {
@@ -69,7 +68,7 @@ export function CiteWidget(args) {
     bookSelect.add(new Option('Purgatorio', 'purgatorio'))
     bookSelect.add(new Option('Paradiso', 'paradiso'))
 
-    bookSelect.value = currentCiteValue.book || "inferno"
+    bookSelect.value = currentCiteValue?.book || "inferno"
 
     const bookSelectContainer = document.createElement('div')
     bookSelectContainer.classList.add("cite-widget-input-container")
@@ -85,7 +84,7 @@ export function CiteWidget(args) {
     cantoInput.required = true
     cantoInput.type = "text"
     cantoInput.size = "10"
-    cantoInput.value = currentCiteValue.canto || ""
+    cantoInput.value = currentCiteValue?.canto || ""
 
     const cantoInputContainer = document.createElement('div')
     cantoInputContainer.classList.add("cite-widget-input-container")
@@ -102,7 +101,7 @@ export function CiteWidget(args) {
     firstLineInput.required = true
     firstLineInput.type = "number"
     firstLineInput.size = "4"
-    firstLineInput.value = currentCiteValue.firstLine || ""
+    firstLineInput.value = currentCiteValue?.firstLine || ""
 
     const firstLineInputContainer = document.createElement("div")
     firstLineInputContainer.classList.add("cite-widget-input-container")
@@ -119,7 +118,7 @@ export function CiteWidget(args) {
     lastLineInput.required = true
     lastLineInput.type = "number"
     lastLineInput.size = "4"
-    lastLineInput.value = currentCiteValue.lastLine || ""
+    lastLineInput.value = currentCiteValue?.lastLine || ""
 
     const lastLineInputContainer = document.createElement("div")
     lastLineInputContainer.classList.add("cite-widget-input-container")
@@ -144,11 +143,16 @@ export function CiteWidget(args) {
     //verseWidget.className = "annotation-widget-verse"
     //verseWidget.role = "textbox"
     //verseWidget.contentEditable = true
-    console.log(currentCiteValue)
-    lines = viewer.textEn.getLines(currentCiteValue?.book,
-                                   currentCiteValue?.canto,
-                                   currentCiteValue?.firstLine,
-                                   currentCiteValue?.lastLine)
+    var lines = [""]
+    if(currentCiteValue){
+      lines =
+        viewer
+          .textEn
+          .getLines(currentCiteValue?.book,
+                    currentCiteValue?.canto,
+                    currentCiteValue?.firstLine,
+                    currentCiteValue?.lastLine)
+    }
     
     verseWidget.innerHTML = lines.join('\n')
 
