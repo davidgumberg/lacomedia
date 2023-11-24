@@ -25,13 +25,14 @@
 
 .annotation-widget-verse {
 	background-color: rgb(240 240 240);
+	display: flex;
+	flex-flow: row wrap;
 	width: 100%;
+	gap: 2rem;
 	padding: 1rem;
-	white-space: pre;
-	
-	counter-reset: line;
 }
 
+/*
 .annotation-widget-verse br {
 	counter-increment: line;
 }
@@ -41,6 +42,7 @@
 	padding-right: .5rem;
 	background: rgb(220 220 220 / 0.4);
 }
+*/
 
 .cite-widget-container {
 	display: flex;

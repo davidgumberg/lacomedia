@@ -4,7 +4,7 @@ import OpenSeadragon from 'openseadragon'
 import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
 
-import { TitleFormatter, CiteWidget } from './annotorious-widgets'
+import { TextWidget, TitleFormatter } from './annotorious-widgets'
 import { LaComediaText } from './text.js'
 
 import SequenceModePlugin from './sequence-mode-plugin'
@@ -46,9 +46,12 @@ export class Viewer{
         console.error('Error loading image schema:', error);
       });
 
+    this.textOg = new LaComediaText(`${window.location.origin}/assets/it.html`)
+    this.textTr = new LaComediaText(`${window.location.origin}/assets/en.html`)
+
     this.anno = Annotorious.default(this.osd, {
       widgets: [
-        { widget: CiteWidget, viewer: this }
+        { widget: TextWidget, viewer: this }
       ],
       formatter: TitleFormatter
     });
@@ -60,7 +63,6 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
-    this.textEn = new LaComediaText(`${window.location.origin}/assets/eng.html`)
   }
 
   imagePath() {

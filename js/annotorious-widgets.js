@@ -1,7 +1,6 @@
-import { LaComediaText } from "./text";
-
-export function CiteWidget(args) {
+export function TextWidget(args) {
   const viewer = args.viewer
+
   const currentCiteBody = args.annotation ?
     args.annotation.bodies.find(function(b) {
       return b.purpose == 'describing'
@@ -138,38 +137,54 @@ export function CiteWidget(args) {
     return citeWidget
   }
 
-  this.italianVerseWidget = function() {
-    const verseWidget = document.createElement('pre')
-    //verseWidget.className = "annotation-widget-verse"
-    //verseWidget.role = "textbox"
-    //verseWidget.contentEditable = true
-    var lines = [""]
-    if(currentCiteValue){
-      lines =
-        viewer
-          .textEn
-          .getLines(currentCiteValue?.book,
-                    currentCiteValue?.canto,
-                    currentCiteValue?.firstLine,
-                    currentCiteValue?.lastLine)
+  this.verseWidget = function() {
+    if(!currentCiteValue || !currentCiteValue?.book || !currentCiteValue?.canto || !currentCiteValue?.firstLine || !currentCiteValue?.lastLine){
+      const emptyDiv = document.createElement('div')
+      return emptyDiv
     }
     
-    verseWidget.innerHTML = lines.join('\n')
+    const verseWidgetEl = document.createElement('div')
+    verseWidgetEl.className = "annotation-widget-verse"
+    const originalLinesEl = document.createElement('pre')
+    const originalLines =
+      viewer
+        .textOg
+        .getLines(currentCiteValue.book,
+                  currentCiteValue.canto,
+                  currentCiteValue.firstLine,
+                  currentCiteValue.lastLine)
+        .join('\n')
+    
+    originalLinesEl.innerHTML = originalLines || ""
+    verseWidgetEl.appendChild(originalLinesEl)
 
-    //verseWidget.addEventListener('blur', this.updateVerse)
-    return verseWidget
+    if(viewer.textTr){
+      const translatedLinesEl = document.createElement('pre')
+      const translatedLines =
+        viewer
+          .textTr
+          .getLines(currentCiteValue.book,
+                    currentCiteValue.canto,
+                    currentCiteValue.firstLine,
+                    currentCiteValue.lastLine)
+          .join('\n')
+      translatedLinesEl.innerHTML = translatedLines || ""
+      verseWidgetEl.appendChild(translatedLinesEl)
+    }
+
+    return verseWidgetEl
   }
 
-  const AnnotationWidgetContainer= document.createElement('div');
-  AnnotationWidgetContainer.className = 'annotation-widget-container';
+  const annotationWidgetContainer = document.createElement('div');
+  annotationWidgetContainer.className = 'annotation-widget-container';
 
-  AnnotationWidgetContainer.appendChild(this.citeWidget())
-  AnnotationWidgetContainer.appendChild(this.italianVerseWidget())
+  annotationWidgetContainer.appendChild(this.citeWidget())
+  annotationWidgetContainer.appendChild(this.verseWidget())
   
-  return AnnotationWidgetContainer;
+  return annotationWidgetContainer;
 }
 
-export function TitleFormatter(annotation) {
+export function TitleFormatter(_annotation) {
 /*
   const currentTitleBody = annotation.bodies.find(function(b) { return b.purpose == 'describing' })
   const currentTitleValue = currentTitleBody ? currentTitleBody.value : null

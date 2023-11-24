@@ -15,9 +15,28 @@ export class LaComediaText {
   }
 
   getLines(book, canto, firstLine, lastLine){
+    if(!book || !canto || !firstLine || !lastLine){
+      return NaN;
+    }
+
     const cantoSelector = `div.canto#Canto${this.bookToRoman(book)}\\.${canto}`
-    const cantoText = this.textDocument.querySelector(cantoSelector).innerText
-    return cantoText.trim().split(/(?:\n\s*)/).slice((firstLine - 1), (lastLine - 1))
+
+    // This could be made more efficient with a single loop if 
+    // performance turns out to be an issue here (doubtful)
+
+    let cantoLines = this.textDocument.querySelector(cantoSelector).innerText
+    cantoLines = cantoLines.trim().split(/(?:\n\s*)/).slice((firstLine - 1), (lastLine - 1))
+    cantoLines = cantoLines.flatMap( (line, index) => {
+      const currLine = firstLine + index
+      if(currLine % 3 == 0) {
+        return [line, "\n"]
+      }
+      else {
+        return line
+      }
+    })
+
+    return cantoLines
   }
 
   bookToRoman(book){
