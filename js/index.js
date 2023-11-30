@@ -35,6 +35,7 @@ if(viewer.hasBigBlackBars()){
 
 const toolbox = new Toolbox(document.querySelector('section.toolbox'), viewer)
 toolbox.addEventListeners()
+viewer.connectToolbox(toolbox)
 
 const elsBackBtn = document.querySelectorAll('a.drawer-headliner')
 elsBackBtn.forEach( (backBtn) => {

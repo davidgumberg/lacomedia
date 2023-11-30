@@ -45,6 +45,15 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
       this.setDrawerHandleState(handleStatus);
   }
 
+  this.isHovered = function() {
+    if (this.elHandleContainer.matches(':hover') || this.elHandle.matches(':hover')){
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   this.addEventListeners = function() {
     this.elHandleContainer.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
     this.elHandleContainer.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.HIDDEN))

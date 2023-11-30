@@ -16,7 +16,7 @@ const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
 
 export class Viewer{
-  constructor(dresser, startingImage = {book: 'inferno', canto: 'VIII', ver: 'smb'}){
+  constructor(dresser, toolbox, startingImage = {book: 'inferno', canto: 'VIII', ver: 'smb'}){
     this.dresser = dresser
 
     this.image = startingImage
@@ -184,19 +184,26 @@ export class Viewer{
   addEventListeners() {
     this.debouncedOsdAnimationHandler = debounce(this._osdAnimationHandler.bind(this))
 
-    this.osd.addHandler("animation", (event) => {
-      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 100}, event)
-    }, { eventType: "animation" })
+    this.osd.addHandler("animation", (_event) => {
+      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 0}, "animation")
+    })
 
-    this.osd.addHandler("animation-finish", (event) => {
-      this.debouncedOsdAnimationHandler({leading: false, trailing: true, delay: 200}, event)
-    }, { eventType: "animation-finish" })
+    this.osd.addHandler("animation-start", (_event) => {
+      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 0}, "animation-start")
+    })
 
-    this.osd.addHandler("canvas-click", (event) => {
-      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 0}, event)
-    }, { eventType: "animation-start" });
+    // Canvas click is identically handled to animation-start
+    this.osd.addHandler("canvas-click", (_event) => {
+      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 20}, "animation-start")
+    })
 
-    //this.osd.addHandler("canvas-scroll", this._osdAnimationHandler, { eventType: "animation-start" });
+    this.osd.addHandler("animation-finish", (_event) => {
+      this.debouncedOsdAnimationHandler({leading: false, trailing: true, delay: 200}, "animation-finish")
+    })
+  }
+
+  connectToolbox(toolbox) {
+    this.toolbox = toolbox
   }
 
   _handleCantoLinkClick(event) {
@@ -214,28 +221,35 @@ export class Viewer{
     this.dresser.closeAllDrawers(false)
   }
 
-  _osdAnimationHandler(event) {
-    const evType = event.userData.eventType
-
+  _osdAnimationHandler(evType) {
     if(!this.dresser.isAnyDrawerOpen() && this.hasBigBlackBars()){
-      // this is a bad way to go about resetting the timer, 
-      // need some kind of an animation queue for the dresser
       clearTimeout(this.debouncedOsdAnimationHandler.timer)
       this.dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
       this.dresser.primaryDrawer.updateDrawerState(DrawerStatus.OPEN, true);
+
+
+      this.toolbox.openToolboxHandle();
+      return;
     }
+
     else if(this.dresser.isAnyDrawerOpen() && !this.hasBigBlackBars() &&
            (evType === 'animation-start' || this.dresser.primaryDrawer.wasAutoToggled === true)) {
       this.dresser.closeAllDrawers()
+      this.toolbox.closeToolboxHandle();
     }
            
     if(evType === 'animation'){
       this.dresser.updateDrawerHandleState(DrawerHandleStatus.PEEKING)
+      this.toolbox.openToolboxHandle();
     }
 
-    if(evType === 'animation-finish' &&
-       !(this.dresser.elHandleContainer.matches(':hover') || this.dresser.elHandle.matches(':hover'))) {
-      this.dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
+    if(evType === 'animation-finish'){
+      if(!this.dresser.isHovered()){
+        this.dresser.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
+      }
+      if(!this.toolbox.isHovered()){
+        this.toolbox.closeToolboxHandle();
+      }
     }
   }
 }

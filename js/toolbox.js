@@ -1,3 +1,5 @@
+import { debounce } from "./util";
+
 export const ToolboxHandleStatus = {
   OPEN: 0,
   CLOSED: 1,
@@ -16,17 +18,20 @@ export class Toolbox {
 
     this.elPrevBtn = this.elToolbox.querySelector('[data-toolbox="prev-btn"]')
     this.elNextBtn = this.elToolbox.querySelector('[data-toolbox="next-btn"]')
+    this.elToolboxHandle = this.elToolbox.querySelector('.toolbox-handle')
     this.elToolboxTools = this.elToolbox.querySelector('.toolbox-tools')
     this.elToolboxToolsOpenBtn = this.elToolboxTools.querySelector('.toolbox-tools-open-btn')
     this.elToolboxToolsAnnotationsSaveBtn = this.elToolboxTools.querySelector('.toolbox-tools-save-annotations')
   }
   
   closeToolboxHandle() {
-    this.setToolboxHandleState(ToolboxHandleStatus.OPEN)
+    this.setToolboxHandleState(ToolboxHandleStatus.CLOSED)
+    this.setToolboxToolsState(ToolboxToolsStatus.CLOSED)
   }
 
   openToolboxHandle() {
-    this.setToolboxHandleState(ToolboxHandleStatus.CLOSED)
+    this.setToolboxHandleState(ToolboxHandleStatus.OPEN)
+    this.setToolboxToolsState(ToolboxToolsStatus.CLOSED)
   }
 
   toggleToolboxTools() {
@@ -63,21 +68,27 @@ export class Toolbox {
     URL.revokeObjectURL(blobUrl)
   }
 
+  isHovered() {
+    return (this.elToolbox.matches(':hover')) ? true : false
+  }
+
   addEventListeners() {
     this.elPrevBtn.addEventListener("click", (event) => this.elPrevBtnListener(event))
     this.elNextBtn.addEventListener("click", (event) => this.elNextBtnListener(event))
     this.elToolboxToolsOpenBtn.addEventListener("click", (event) => this.elToggleBtnListener(event))
     this.elToolboxToolsAnnotationsSaveBtn.addEventListener("click", (event) => this.saveAnnotationsListener(event))
+    this.elToolbox.addEventListener("mouseenter", () => this.setToolboxHandleState(ToolboxHandleStatus.OPEN))
+    this.elToolbox.addEventListener("mouseleave", () => this.setToolboxHandleState(ToolboxHandleStatus.CLOSED))
   }
 
   setToolboxHandleState(status) {
     if(status === ToolboxHandleStatus.OPEN){
-      this.elToolbox.classList.add('toolbox-handle-open')
-      this.elToolbox.classList.remove('toolbox-handle-closed')
+      this.elToolboxHandle.classList.add('toolbox-handle-open')
+      this.elToolboxHandle.classList.remove('toolbox-handle-closed')
     }
     else if(status === ToolboxHandleStatus.CLOSED){
-      this.elToolbox.classList.add('toolbox-handle-closed')
-      this.elToolbox.classList.remove('toolbox-handle-open')
+      this.elToolboxHandle.classList.add('toolbox-handle-closed')
+      this.elToolboxHandle.classList.remove('toolbox-handle-open')
     }
   }
 

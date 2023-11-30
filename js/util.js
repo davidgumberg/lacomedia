@@ -24,3 +24,8 @@ export function debounce(func) {
     }, options.delay)
   }
 }
+
+export function passClickThrough(event) {
+  event.target.style.pointerEvents = "none"
+  event.target.style.pointerEvents = "auto"
+}
