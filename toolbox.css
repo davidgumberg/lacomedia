@@ -106,9 +106,3 @@
 	display: block;
 	filter: drop-shadow(rgb(155 0 0 / .3) 1px -1px 1.5px )
 }
-
-/* because of internal a9s css rules, there is no way arou dthe !import decl */
-.a9s-handle-inner {
-	fill: transparent !important;
-	stroke: transparent !important;
-}

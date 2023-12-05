@@ -5,8 +5,7 @@ import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
 
 import { TextWidget, TitleFormatter } from './annotorious-widgets'
-import { LaComediaText } from './text.js'
-
+import { LaComediaText } from './text'
 import SequenceModePlugin from './sequence-mode-plugin'
 
 import { DrawerHandleStatus, DrawerStatus } from './dresser'
