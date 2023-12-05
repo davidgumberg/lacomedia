@@ -20,7 +20,8 @@ body {
     font-family: Quattrocento;
     position: absolute;
     height: 100dvh;
-    width: 100dvw;it
+    width: 100dvw;
+	overflow: clip;
 }
 
 main {
@@ -51,7 +52,6 @@ main .viewer {
     grid-template-columns: 
 }
 */
-
 
 .dresser {
     position: absolute;

@@ -1,12 +1,23 @@
 .toolbox {
+	display: flex;
+	flex-flow: column nowrap;
+
+
+	justify-content: flex-end;
 	z-index: 1;
 	position: fixed;
+
+	pointer-events: none;
 
 	bottom: 1%;
 	right: 2%;
 	font-size: 3rem;
 
 	height: 100%;
+}
+
+.toolbox * {
+	pointer-events:auto;
 }
 
 .toolbox-handle {
@@ -32,6 +43,7 @@
 	display: flex;
 	flex-flow: column nowrap;
 	gap: 1.2rem;
+	height: 100%;
 }
 
 .toolbox-tools-btn {
@@ -54,5 +66,49 @@
 	display: block;
 }
 
+.toolbox-tools-open-btn {
+	background-image: url('assets/toolbox-menu.svg');
+	padding-top: 1rem;
+	width: 6rem;
+	height: 6rem;
+}
 
+.toolbox-open-icon {
+	display: block;
+	background: url(assets/toolbox-menu.svg);
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 100%;
+	height: 100%;
+}
 
+.toolbox-handle-button[data-toolbox="next-btn"] {
+	background-image: url('assets/finger-right.svg');
+	height: 6rem;
+	width: 10rem;
+	display: block;
+	flex: 1 30%;
+}
+
+.toolbox-handle-button[data-toolbox="prev-btn"] {
+	background-image: url('assets/finger-left.svg');
+	height: 6rem;
+	width: 10rem;
+	display: block;
+	flex: 1 30%;
+}
+
+.toolbox-handle-button {
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	display: block;
+	filter: drop-shadow(rgb(155 0 0 / .3) 1px -1px 1.5px )
+}
+
+/* because of internal a9s css rules, there is no way arou dthe !import decl */
+.a9s-handle-inner {
+	fill: transparent !important;
+	stroke: transparent !important;
+}
