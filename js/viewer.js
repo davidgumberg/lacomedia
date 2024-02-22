@@ -3,6 +3,7 @@ import OpenSeadragon from 'openseadragon'
 // Import annotorious and CSS
 import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
+import { fitBoundsWithWidget } from './annoviewer-plugin'
 
 import { TextWidget, TitleFormatter } from './annotorious-widgets'
 import { LaComediaText } from './text'
@@ -52,7 +53,7 @@ export class Viewer{
       widgets: [
         { widget: TextWidget, viewer: this }
       ],
-      formatter: TitleFormatter
+    //  formatter: TitleFormatter
     });
 
     fetch(`${window.location.origin}/assets/annotations.json`)
@@ -62,6 +63,11 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
+    this.anno.disableEditor = true
+    const osd = this.osd
+    this.anno.on('selectAnnotation', function(_annotation, element) {
+      fitBoundsWithWidget(element, null, osd)
+    })
   }
 
   imagePath() {

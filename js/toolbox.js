@@ -1,5 +1,6 @@
 import { debounce } from "./util";
 
+
 export const ToolboxHandleStatus = {
   OPEN: 0,
   CLOSED: 1,
@@ -10,12 +11,14 @@ export const ToolboxToolsStatus = {
   CLOSED: 1,
 };
 
+// Toolbox is the self-hiding viewer controls, including previous and next buttons
 export class Toolbox {
   constructor(elToolbox, viewer){
     this._viewer = viewer
 
     this.elToolbox = elToolbox
 
+    // connect the toolbox components to their respective html elements
     this.elPrevBtn = this.elToolbox.querySelector('[data-toolbox="prev-btn"]')
     this.elNextBtn = this.elToolbox.querySelector('[data-toolbox="next-btn"]')
     this.elToolboxHandle = this.elToolbox.querySelector('.toolbox-handle')
@@ -26,6 +29,8 @@ export class Toolbox {
   
   closeToolboxHandle() {
     this.setToolboxHandleState(ToolboxHandleStatus.CLOSED)
+
+    // when we close the toolobx
     this.setToolboxToolsState(ToolboxToolsStatus.CLOSED)
   }
 
