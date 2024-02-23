@@ -5,7 +5,7 @@ import * as Annotorious from '@recogito/annotorious-openseadragon'
 import BetterPolygon from '@recogito/annotorious-better-polygon'
 import { fitBoundsWithWidget } from './annoviewer-plugin'
 
-import { TextWidget, TitleFormatter } from './annotorious-widgets'
+import { CitationEditWidget, CitationViewWidget } from './annotorious-widgets'
 import { LaComediaText } from './text'
 import SequenceModePlugin from './sequence-mode-plugin'
 
@@ -15,6 +15,8 @@ import { debounce } from './util'
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
 
+/** This mega-class wraps the OSD viewer, the annotorious widgets, and all of our custom
+ * controls and widgets. */
 export class Viewer{
   constructor(dresser, toolbox, startingImage = {book: 'inferno', canto: 'VIII', ver: 'smb'}){
     this.dresser = dresser
@@ -26,7 +28,7 @@ export class Viewer{
       visibilityRatio: 1,
       minZoomImageRatio: 1,
       maxZoomPixelRatio: 41,
-      tileSources: this.imagePath(),
+      tileSources: this._imagePath(),
       showNavigationControl: false,
       gestureSettingsMouse: {
           clickToZoom: false,
@@ -40,7 +42,7 @@ export class Viewer{
       .then(response => response.json())
       .then(data => {
         this.imageSchema = data
-        this.imageSchema.books.forEach((book) => this.buildBookLinks(book))
+        this.imageSchema.books.forEach((book) => this._buildBookLinks(book))
       })
       .catch(error => {
         console.error('Error loading image schema:', error);
@@ -51,9 +53,8 @@ export class Viewer{
 
     this.anno = Annotorious.default(this.osd, {
       widgets: [
-        { widget: TextWidget, viewer: this }
+        { widget: CitationEditWidget, viewer: this }
       ],
-    //  formatter: TitleFormatter
     });
 
     fetch(`${window.location.origin}/assets/annotations.json`)
@@ -63,17 +64,21 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
-    this.anno.disableEditor = true
+    this.anno.readOnly = false
     const osd = this.osd
-    this.anno.on('selectAnnotation', function(_annotation, element) {
+
+    this.anno.on('selectAnnotation', function(annotation, element) {
       fitBoundsWithWidget(element, null, osd)
+
+      console.log(annotation) 
+      let citeviewer = new CitationViewWidget(annotation, element)
+      citeviewer.show()
     })
   }
 
-  imagePath() {
-    return(`${DZ_URL_PREFIX}${this.image.ver}/${this.image.book}/${this.image.canto}.dzi`)
-  }
 
+  /** Sets image to the book, canto and version provided. Used by the setCantotoNext() and prev
+   * and by the dresser Canto menu */
   setCanto(book, canto, ver = undefined) {
     if(ver === undefined){
       const schemaBook = this.imageSchema.books.find((i) => i.name === book)
@@ -91,12 +96,20 @@ export class Viewer{
     }
 
     this.image = {book: book, canto: canto, ver: ver}
-    this.osd.open(this.imagePath())
+    this.osd.open(this._imagePath())
 
     const newCantoParams = new URLSearchParams([["book", book],
                                           ["canto", canto],
                                           ["ver", ver]])
     history.pushState({}, `${book} ${canto}`, '?' + newCantoParams)
+  }
+
+  disableEditor() {
+    this.anno.disableEditor = true
+  }
+
+  enableEditor() {
+    this.anno.disableEditor = false
   }
 
   setCantoToNext() {
@@ -153,37 +166,6 @@ export class Viewer{
     else {
       return false
     }
-  }
-
-  buildBookLinks(schemaBook) {
-    const elTargetDiv =
-      this.dresser
-        .drawers.find((drawer) => drawer.name === schemaBook.name)
-        .elDrawer
-        .querySelector('.drawer-contents')
-
-    schemaBook.cantos.forEach(canto => {
-      const cantoLink = document.createElement("a")
-      cantoLink.setAttribute("data-book", schemaBook.name)
-      cantoLink.setAttribute("data-canto", canto.name)
-
-      const cantoVersionsString = canto.versions.reduce((acc, curr) => {
-        // initial iteration
-        if (acc === ""){
-          return curr.name
-        }
-        else {
-          return acc + ", " + curr.name
-        }
-      }, "")
-        
-      cantoLink.setAttribute("data-canto-versions", cantoVersionsString)
-      const cantoName = document.createTextNode(canto.name)
-      cantoLink.appendChild(cantoName)
-      cantoLink.addEventListener("click", (event) => this._handleCantoLinkClick(event))
-
-      elTargetDiv.appendChild(cantoLink)
-    })
   }
 
   addEventListeners() {
@@ -256,5 +238,43 @@ export class Viewer{
         this.toolbox.closeToolboxHandle();
       }
     }
+  }
+
+  /* Assemble and append links to all the canto images */
+  _buildBookLinks(schemaBook) {
+    const elTargetDiv =
+      this.dresser
+        .drawers.find((drawer) => drawer.name === schemaBook.name)
+        .elDrawer
+        .querySelector('.drawer-contents')
+
+    schemaBook.cantos.forEach(canto => {
+      const cantoLink = document.createElement("a")
+      cantoLink.setAttribute("data-book", schemaBook.name)
+      cantoLink.setAttribute("data-canto", canto.name)
+
+      const cantoVersionsString = canto.versions.reduce((acc, curr) => {
+        // initial iteration
+        if (acc === ""){
+          return curr.name
+        }
+        else {
+          return acc + ", " + curr.name
+        }
+      }, "")
+        
+      cantoLink.setAttribute("data-canto-versions", cantoVersionsString)
+      const cantoName = document.createTextNode(canto.name)
+      cantoLink.appendChild(cantoName)
+      cantoLink.addEventListener("click", (event) => this._handleCantoLinkClick(event))
+
+      elTargetDiv.appendChild(cantoLink)
+    })
+  }
+
+
+  /* utility function that returns the .dzi filepath for a given image */
+  _imagePath() {
+    return(`${DZ_URL_PREFIX}${this.image.ver}/${this.image.book}/${this.image.canto}.dzi`)
   }
 }

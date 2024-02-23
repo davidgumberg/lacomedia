@@ -1,4 +1,4 @@
-export function TextWidget(args) {
+export function CitationEditWidget(args) {
   const viewer = args.viewer
 
   const currentCiteBody = args.annotation ?
@@ -6,12 +6,11 @@ export function TextWidget(args) {
       return b.purpose == 'describing'
     }) : null;
 
+  const currentCiteValue = currentCiteBody ? currentCiteBody.value : null
   const currentVerseBody = args.annotation ?
     args.annotation.bodies.find(function(b) {
       return b.purpose == 'linking'
-    }) : null;
-
-  const currentCiteValue = currentCiteBody ? currentCiteBody.value : null
+  }) : null;
 
   this.updateCite = function(_event, inputs) {
     if (currentCiteBody) {
@@ -53,6 +52,8 @@ export function TextWidget(args) {
     window.getSelection().addRange(range);
   }
 
+  /* citeWidget is responsible for the html form that is used to edit the w3c
+   * annotation that we serve */
   this.citeWidget = function() {
     const citeWidget = document.createElement('div')
     citeWidget.classList.add("cite-widget-container")
@@ -142,7 +143,7 @@ export function TextWidget(args) {
       const emptyDiv = document.createElement('div')
       return emptyDiv
     }
-    
+
     const verseWidgetEl = document.createElement('div')
     verseWidgetEl.className = "annotation-widget-verse"
     const originalLinesEl = document.createElement('pre')
@@ -154,7 +155,7 @@ export function TextWidget(args) {
                   currentCiteValue.firstLine,
                   currentCiteValue.lastLine)
         .join('\n')
-    
+
     originalLinesEl.innerHTML = originalLines || ""
     verseWidgetEl.appendChild(originalLinesEl)
 
@@ -175,6 +176,7 @@ export function TextWidget(args) {
     return verseWidgetEl
   }
 
+
   const annotationWidgetContainer = document.createElement('div');
   annotationWidgetContainer.className = 'annotation-widget-container';
 
@@ -184,12 +186,8 @@ export function TextWidget(args) {
   return annotationWidgetContainer;
 }
 
-export function TitleFormatter(_annotation) {
-/*
-  const currentTitleBody = annotation.bodies.find(function(b) { return b.purpose == 'describing' })
-  const currentTitleValue = currentTitleBody ? currentTitleBody.value : null
-
-  return currentTitleValue
-*/
-  return "eek"
+export class CitationViewWidget {
+  constructor(annotation, element){
+    //debugger
+  }
 }

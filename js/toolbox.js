@@ -1,6 +1,5 @@
 import { debounce } from "./util";
 
-
 export const ToolboxHandleStatus = {
   OPEN: 0,
   CLOSED: 1,
