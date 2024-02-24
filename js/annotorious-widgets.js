@@ -1,7 +1,7 @@
 export function CitationEditWidget(args) {
   this.viewer = args.viewer
   this.args = args
-  this.annotation = new CiteAnnotation(args.annotation)
+  this.annotation = new CiteAnnotation(args.annotation.underlying)
 
   this.updateCite = function(_event, inputs) {
     if (this.annotation.citeBody) {
@@ -179,8 +179,57 @@ export function CitationEditWidget(args) {
 }
 
 export class CitationViewWidget {
-  constructor(annotation, element){
-    //const this.annotation.citeValue() = annotation.currentCiteBody ? currentCiteBody.value : null
+  constructor(annotation, _element, viewer){
+    this.viewer = viewer
+    this.annotation = new CiteAnnotation(annotation)
+  }
+
+  verseWidget() {
+    if(!this.annotation.citeValue() || !this.annotation.citeValue()?.book
+    || !this.annotation.citeValue()?.canto || !this.annotation.citeValue()?.firstLine
+    || !this.annotation.citeValue()?.lastLine){
+      const emptyDiv = document.createElement('div')
+      return emptyDiv
+    }
+
+    const verseWidgetEl = document.createElement('div')
+    verseWidgetEl.className = "annotation-widget-verse"
+    const originalLinesEl = document.createElement('pre')
+    const originalLines =
+      this.viewer
+        .textOg
+        .getLines(this.annotation.citeValue().book,
+                  this.annotation.citeValue().canto,
+                  this.annotation.citeValue().firstLine,
+                  this.annotation.citeValue().lastLine)
+        .join('\n')
+
+    originalLinesEl.innerHTML = originalLines || ""
+    verseWidgetEl.appendChild(originalLinesEl)
+
+    if(this.viewer.textTr){
+      const translatedLinesEl = document.createElement('pre')
+      const translatedLines =
+        this.viewer
+          .textTr
+          .getLines(this.annotation.citeValue().book,
+                    this.annotation.citeValue().canto,
+                    this.annotation.citeValue().firstLine,
+                    this.annotation.citeValue().lastLine)
+          .join('\n')
+      translatedLinesEl.innerHTML = translatedLines || ""
+      verseWidgetEl.appendChild(translatedLinesEl)
+    }
+
+    return verseWidgetEl
+  }
+
+  show(){
+    ;
+  }
+
+  destroy(){
+
   }
 }
 
@@ -188,13 +237,14 @@ export class CitationViewWidget {
 class CiteAnnotation {
   constructor(annotation){
     this.annotation = annotation
+    console.log(this.annotation)
 
     this.citeBody = this.annotation
-      ? this.annotation.bodies.find(b => b.purpose === 'describing')
+      ? this.annotation.body.find(b => b.purpose === 'describing')
       : null
 
     this.verseBody = this.annotation
-      ? this.annotation.bodies.find(b => b.purpose === 'linking')
+      ? this.annotation.body.find(b => b.purpose === 'linking')
       : null
   }
 

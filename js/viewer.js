@@ -67,12 +67,21 @@ export class Viewer{
     this.anno.readOnly = false
     const osd = this.osd
 
-    this.anno.on('selectAnnotation', function(annotation, element) {
+    // TEMPORARY VALUE
+    this.disableEditor();
+    
+    this.anno.on('selectAnnotation', (annotation, element) => {
+      // Fit bounds on annote selection
       fitBoundsWithWidget(element, null, osd)
 
-      console.log(annotation) 
-      //let citeviewer = new CitationViewWidget(annotation, element)
-      //citeviewer.show()
+      // If editor is disabled, show our custom cite widget
+      if(this.anno.disableEditor == true){
+        let citeviewer = new CitationViewWidget(annotation, element)
+        citeviewer.show()
+        this.anno.on('cancelSelected', function(_selection) {
+          citeviewer.destroy()
+        })
+      }
     })
   }
 
