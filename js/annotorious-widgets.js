@@ -189,6 +189,8 @@ export class CitationViewWidget {
   }
 
   show(){
+    // Return if we already have an overlayElement set
+    if(this.overlayElement) return;
     const citationViewContainerEl = document.createElement('div')
     citationViewContainerEl.className = "citation-view-container"
     citationViewContainerEl.appendChild(this.verseWidget())
@@ -207,6 +209,7 @@ export class CitationViewWidget {
 
   destroy(){
     this.viewer.osd.removeOverlay(this.overlayElement)
+    this.overlayElement = null
   }
 
   verseWidget() {
