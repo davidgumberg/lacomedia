@@ -1,3 +1,7 @@
+import {computePosition} from '@floating-ui/dom'
+import { getAnnoRect } from './annoviewer-plugin'
+import OpenSeadragon from 'openseadragon'
+
 export function CitationEditWidget(args) {
   this.viewer = args.viewer
   this.args = args
@@ -177,9 +181,11 @@ export function CitationEditWidget(args) {
 }
 
 export class CitationViewWidget {
-  constructor(annotation, _element, viewer){
+  constructor(annotation, element, viewer){
     this.viewer = viewer
+    this.element = element
     this.annotation = new CiteAnnotation(annotation)
+    this.annotationRect = getAnnoRect(this.element, this.viewer.osd)
   }
 
   show(){
@@ -187,14 +193,22 @@ export class CitationViewWidget {
     citationViewContainerEl.className = "citation-view-container"
     citationViewContainerEl.appendChild(this.verseWidget())
 
-    this.element = document.body.appendChild(citationViewContainerEl)
+    let origin = this.annotationRect.getTopLeft();
+
+    this.overlayElement = citationViewContainerEl
+    this.viewer.osd.addOverlay(this.overlayElement, origin,
+                               OpenSeadragon.Placement.TOP_RIGHT);
+    const overlay = this.viewer.osd.getOverlayById(this.overlayElement)
+
+    let annotationAndOverlayRect = this.annotationRect.union(overlay.getBounds(this.viewer.osd.viewport))
+
+    this.viewer.osd.viewport.fitBoundsWithConstraints(annotationAndOverlayRect)
   }
 
   destroy(){
-    if(this.element){
-      this.element.remove()
-    }
+    this.viewer.osd.removeOverlay(this.overlayElement)
   }
+
   verseWidget() {
     if(!this.annotation.hasValidCiteValue()){
       const emptyDiv = document.createElement('div')
@@ -229,7 +243,7 @@ export class CitationViewWidget {
       translatedLinesEl.innerHTML = translatedLines || ""
       verseWidgetEl.appendChild(translatedLinesEl)
     }
-
+    
     return verseWidgetEl
   }
 }

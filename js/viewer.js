@@ -65,14 +65,13 @@ export class Viewer{
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
     this.anno.readOnly = false
-    const osd = this.osd
 
     // TEMPORARY VALUE
     this.disableEditor();
     
     this.anno.on('selectAnnotation', (annotation, element) => {
       // Fit bounds on annote selection
-      fitBoundsWithWidget(element, null, osd)
+      // fitBoundsWithWidget(element, null, osd)
 
       // If editor is disabled, show our custom cite widget
       if(this.anno.disableEditor == true){

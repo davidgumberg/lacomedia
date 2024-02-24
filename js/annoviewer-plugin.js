@@ -1,6 +1,10 @@
-export function fitBoundsWithWidget(annotationShape, widget, viewer) {
-  const containerBounds = viewer.container.getBoundingClientRect()
+export function fitBoundsWithWidget(annotationShape, widget, osd) {
+  const containerBounds = osd.container.getBoundingClientRect()
+  const rect = getAnnoRect(annotationShape, osd)
+  osd.viewport.fitBoundsWithConstraints(rect)
+}
 
+export function getAnnoRect(annotationShape, osd){
   const {x, y, width, height } = annotationShape.getBBox()
   const padX = x
   const padY = y
@@ -8,6 +12,5 @@ export function fitBoundsWithWidget(annotationShape, widget, viewer) {
   const padW = width 
   const padH = height
 
-  const rect = viewer.viewport.imageToViewportRectangle(padX, padY, padW, padH)
-  viewer.viewport.fitBoundsWithConstraints(rect)
+  return osd.viewport.imageToViewportRectangle(padX, padY, padW, padH)
 }

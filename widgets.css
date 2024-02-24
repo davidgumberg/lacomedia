@@ -1,12 +1,11 @@
 .citation-view-container {
     position:absolute;
-    top: 0;
-    left: 0;
 
     border-radius:1%;
     
     background: rgba(200, 175, 190, 0.85);
     box-shadow: 1.5px 0.5px 2px 1px rgb(0 0 0 / 10%);
+    max-width: 30vw;
 }
 
 .citation-view-container .citation-view-verse{
