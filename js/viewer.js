@@ -64,14 +64,15 @@ export class Viewer{
       })
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
-    this.anno.readOnly = false
 
-    // TEMPORARY VALUE
-    this.disableEditor();
+    this.annotationsVisible = true;
+    this.anno.disableEditor = true
     
     this.anno.on('selectAnnotation', (annotation, element) => {
       // Fit bounds on annote selection
-      // fitBoundsWithWidget(element, null, osd)
+      if(this.anno.disableEditor == false){
+        fitBoundsWithWidget(element, null, this.osd)
+      }
 
       // If editor is disabled, show our custom cite widget
       if(this.anno.disableEditor == true){
@@ -112,11 +113,31 @@ export class Viewer{
     history.pushState({}, `${book} ${canto}`, '?' + newCantoParams)
   }
 
-  disableEditor() {
-    this.anno.disableEditor = true
+  toggleEditor() {
+    if(this.anno.readOnly == false) {
+      this.anno.readOnly = true
+      this.anno.disableEditor = true
+    }
+    else {
+      this.anno.readOnly = false
+      this.anno.disableEditor = false
+    }
   }
 
-  enableEditor() {
+  toggleAnnotations() {  
+    if(this.annotationsVisible == true){
+      this.annotationsVisible = false
+      this.anno.setVisible(false)
+      this.anno.readOnly = true
+      this.anno.disableEditor = true
+    }
+    else {
+      this.annotationsVisible = true
+      this.anno.setVisible(true)
+      this.anno.disableEditor = false
+    }
+  }
+  enableAnnotations() {
     this.anno.disableEditor = false
   }
 

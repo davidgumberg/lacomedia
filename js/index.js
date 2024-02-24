@@ -2,6 +2,7 @@ import { Dresser, Drawer, DrawerStatus, DrawerHandleStatus } from './dresser.js'
 import { Viewer } from './viewer.js'
 import { Toolbox } from './toolbox.js'
 
+/* Set up drawer links */
 const elDrawerBooks = document.querySelector('[data-drawer="books"]')
 const elDrawerInferno = document.querySelector ('[data-drawer="inferno"]')
 const elDrawerPurgatorio = document.querySelector ('[data-drawer="purgatorio"]')

@@ -1,4 +1,3 @@
-import {computePosition} from '@floating-ui/dom'
 import { getAnnoRect } from './annoviewer-plugin'
 import OpenSeadragon from 'openseadragon'
 

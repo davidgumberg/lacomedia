@@ -24,6 +24,8 @@ export class Toolbox {
     this.elToolboxTools = this.elToolbox.querySelector('.toolbox-tools')
     this.elToolboxToolsOpenBtn = this.elToolboxTools.querySelector('.toolbox-tools-open-btn')
     this.elToolboxToolsAnnotationsSaveBtn = this.elToolboxTools.querySelector('.toolbox-tools-save-annotations')
+    this.elToolboxToolsToggleEditBtn = this.elToolboxTools.querySelector('.toolbox-tools-toggle-edit')
+    this.elToolboxToolsToggleAnnotationsBtn = this.elToolboxTools.querySelector('.toolbox-tools-toggle-annotations')
   }
   
   closeToolboxHandle() {
@@ -83,6 +85,9 @@ export class Toolbox {
     this.elToolboxToolsAnnotationsSaveBtn.addEventListener("click", (event) => this.saveAnnotationsListener(event))
     this.elToolbox.addEventListener("mouseenter", () => this.setToolboxHandleState(ToolboxHandleStatus.OPEN))
     this.elToolbox.addEventListener("mouseleave", () => this.setToolboxHandleState(ToolboxHandleStatus.CLOSED))
+
+    this.elToolboxToolsToggleAnnotationsBtn.addEventListener("click", (_event) => this._viewer.toggleAnnotations())
+    this.elToolboxToolsToggleEditBtn.addEventListener("click", (_event) => this._viewer.toggleEditor())
   }
 
   setToolboxHandleState(status) {
