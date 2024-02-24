@@ -1,27 +1,18 @@
 export function CitationEditWidget(args) {
-  const viewer = args.viewer
-
-  const currentCiteBody = args.annotation ?
-    args.annotation.bodies.find(function(b) {
-      return b.purpose == 'describing'
-    }) : null;
-
-  const currentCiteValue = currentCiteBody ? currentCiteBody.value : null
-  const currentVerseBody = args.annotation ?
-    args.annotation.bodies.find(function(b) {
-      return b.purpose == 'linking'
-  }) : null;
+  this.viewer = args.viewer
+  this.args = args
+  this.annotation = new CiteAnnotation(args.annotation)
 
   this.updateCite = function(_event, inputs) {
-    if (currentCiteBody) {
-      args.onUpdateBody(currentCiteBody, {
+    if (this.annotation.citeBody) {
+      this.args.onUpdateBody(this.annotation.citeBody, {
         type: 'TextualBody',
         purpose: 'describing',
         value: inputs 
       });
     }
     else { 
-      args.onAppendBody({
+      this.args.onAppendBody({
         type: 'TextualBody',
         purpose: 'describing',
         value: inputs 
@@ -33,15 +24,15 @@ export function CitationEditWidget(args) {
     const sel = window.getSelection();
     const range = sel?.rangeCount > 0 ? sel?.getRangeAt(0) : null
 
-    if (currentVerseBody) {
-      args.onUpdateBody(currentVerseBody, {
+    if (this.annotation.verseBody) {
+      this.args.onUpdateBody(this.annotation.verseBody, {
         type: 'TextualBody',
         purpose: 'linking',
         value: event.target.innerHTML
       });
     }
     else { 
-      args.onAppendBody({
+      this.args.onAppendBody({
         type: 'TextualBody',
         purpose: 'linking',
         value: event.target.innerHTML
@@ -68,7 +59,7 @@ export function CitationEditWidget(args) {
     bookSelect.add(new Option('Purgatorio', 'purgatorio'))
     bookSelect.add(new Option('Paradiso', 'paradiso'))
 
-    bookSelect.value = currentCiteValue?.book || "inferno"
+    bookSelect.value = this.annotation.citeValue()?.book || "inferno"
 
     const bookSelectContainer = document.createElement('div')
     bookSelectContainer.classList.add("cite-widget-input-container")
@@ -84,7 +75,7 @@ export function CitationEditWidget(args) {
     cantoInput.required = true
     cantoInput.type = "text"
     cantoInput.size = "10"
-    cantoInput.value = currentCiteValue?.canto || ""
+    cantoInput.value = this.annotation.citeValue()?.canto || ""
 
     const cantoInputContainer = document.createElement('div')
     cantoInputContainer.classList.add("cite-widget-input-container")
@@ -101,7 +92,7 @@ export function CitationEditWidget(args) {
     firstLineInput.required = true
     firstLineInput.type = "number"
     firstLineInput.size = "4"
-    firstLineInput.value = currentCiteValue?.firstLine || ""
+    firstLineInput.value = this.annotation.citeValue()?.firstLine || ""
 
     const firstLineInputContainer = document.createElement("div")
     firstLineInputContainer.classList.add("cite-widget-input-container")
@@ -118,7 +109,7 @@ export function CitationEditWidget(args) {
     lastLineInput.required = true
     lastLineInput.type = "number"
     lastLineInput.size = "4"
-    lastLineInput.value = currentCiteValue?.lastLine || ""
+    lastLineInput.value = this.annotation.citeValue()?.lastLine || ""
 
     const lastLineInputContainer = document.createElement("div")
     lastLineInputContainer.classList.add("cite-widget-input-container")
@@ -139,7 +130,9 @@ export function CitationEditWidget(args) {
   }
 
   this.verseWidget = function() {
-    if(!currentCiteValue || !currentCiteValue?.book || !currentCiteValue?.canto || !currentCiteValue?.firstLine || !currentCiteValue?.lastLine){
+    if(!this.annotation.citeValue() || !this.annotation.citeValue()?.book
+    || !this.annotation.citeValue()?.canto || !this.annotation.citeValue()?.firstLine
+    || !this.annotation.citeValue()?.lastLine){
       const emptyDiv = document.createElement('div')
       return emptyDiv
     }
@@ -148,26 +141,26 @@ export function CitationEditWidget(args) {
     verseWidgetEl.className = "annotation-widget-verse"
     const originalLinesEl = document.createElement('pre')
     const originalLines =
-      viewer
+      this.viewer
         .textOg
-        .getLines(currentCiteValue.book,
-                  currentCiteValue.canto,
-                  currentCiteValue.firstLine,
-                  currentCiteValue.lastLine)
+        .getLines(this.annotation.citeValue().book,
+                  this.annotation.citeValue().canto,
+                  this.annotation.citeValue().firstLine,
+                  this.annotation.citeValue().lastLine)
         .join('\n')
 
     originalLinesEl.innerHTML = originalLines || ""
     verseWidgetEl.appendChild(originalLinesEl)
 
-    if(viewer.textTr){
+    if(this.viewer.textTr){
       const translatedLinesEl = document.createElement('pre')
       const translatedLines =
-        viewer
+        this.viewer
           .textTr
-          .getLines(currentCiteValue.book,
-                    currentCiteValue.canto,
-                    currentCiteValue.firstLine,
-                    currentCiteValue.lastLine)
+          .getLines(this.annotation.citeValue().book,
+                    this.annotation.citeValue().canto,
+                    this.annotation.citeValue().firstLine,
+                    this.annotation.citeValue().lastLine)
           .join('\n')
       translatedLinesEl.innerHTML = translatedLines || ""
       verseWidgetEl.appendChild(translatedLinesEl)
@@ -175,7 +168,6 @@ export function CitationEditWidget(args) {
 
     return verseWidgetEl
   }
-
 
   const annotationWidgetContainer = document.createElement('div');
   annotationWidgetContainer.className = 'annotation-widget-container';
@@ -188,6 +180,25 @@ export function CitationEditWidget(args) {
 
 export class CitationViewWidget {
   constructor(annotation, element){
-    //debugger
+    //const this.annotation.citeValue() = annotation.currentCiteBody ? currentCiteBody.value : null
+  }
+}
+
+/** A wrapper for the w3c annotation object provided by annotorious */
+class CiteAnnotation {
+  constructor(annotation){
+    this.annotation = annotation
+
+    this.citeBody = this.annotation
+      ? this.annotation.bodies.find(b => b.purpose === 'describing')
+      : null
+
+    this.verseBody = this.annotation
+      ? this.annotation.bodies.find(b => b.purpose === 'linking')
+      : null
+  }
+
+  citeValue() {
+    return this.citeBody ? this.citeBody.value : null
   }
 }

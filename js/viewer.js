@@ -71,8 +71,8 @@ export class Viewer{
       fitBoundsWithWidget(element, null, osd)
 
       console.log(annotation) 
-      let citeviewer = new CitationViewWidget(annotation, element)
-      citeviewer.show()
+      //let citeviewer = new CitationViewWidget(annotation, element)
+      //citeviewer.show()
     })
   }
 
