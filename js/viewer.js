@@ -48,8 +48,8 @@ export class Viewer{
         console.error('Error loading image schema:', error);
       });
 
-    this.textOg = new LaComediaText(`${window.location.origin}/assets/it.html`)
-    this.textTr = new LaComediaText(`${window.location.origin}/assets/en.html`)
+    this.textOg = new LaComediaText(`${window.location.pathname}/assets/it.html`)
+    this.textTr = new LaComediaText(`${window.location.pathname}/assets/en.html`)
 
     this.anno = Annotorious.default(this.osd, {
       widgets: [
@@ -57,7 +57,7 @@ export class Viewer{
       ],
     });
 
-    fetch(`${window.location.origin}/assets/annotations.json`)
+    fetch(`${window.location.pathname}/assets/annotations.json`)
       .then(response => response.json())
       .then(data => {
         SequenceModePlugin(this.anno, this, {pagedAnnotations: data})
