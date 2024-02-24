@@ -22,3 +22,9 @@
     font-weight: bold;
     src: url('fonts/Quattrocento-Bold.ttf');
 }
+
+@font-face {
+    font-family: 'Garamond';
+    font-weight: regular;
+    src: url('fonts/EBGaramond-VariableFont_wght.ttf');
+}

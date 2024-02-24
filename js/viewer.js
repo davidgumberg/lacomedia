@@ -76,7 +76,7 @@ export class Viewer{
 
       // If editor is disabled, show our custom cite widget
       if(this.anno.disableEditor == true){
-        let citeviewer = new CitationViewWidget(annotation, element)
+        let citeviewer = new CitationViewWidget(annotation, element, this)
         citeviewer.show()
         this.anno.on('cancelSelected', function(_selection) {
           citeviewer.destroy()

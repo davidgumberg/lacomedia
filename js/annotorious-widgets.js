@@ -130,9 +130,7 @@ export function CitationEditWidget(args) {
   }
 
   this.verseWidget = function() {
-    if(!this.annotation.citeValue() || !this.annotation.citeValue()?.book
-    || !this.annotation.citeValue()?.canto || !this.annotation.citeValue()?.firstLine
-    || !this.annotation.citeValue()?.lastLine){
+    if(!this.annotation.hasValidCiteValue()){
       const emptyDiv = document.createElement('div')
       return emptyDiv
     }
@@ -184,16 +182,27 @@ export class CitationViewWidget {
     this.annotation = new CiteAnnotation(annotation)
   }
 
+  show(){
+    const citationViewContainerEl = document.createElement('div')
+    citationViewContainerEl.className = "citation-view-container"
+    citationViewContainerEl.appendChild(this.verseWidget())
+
+    this.element = document.body.appendChild(citationViewContainerEl)
+  }
+
+  destroy(){
+    if(this.element){
+      this.element.remove()
+    }
+  }
   verseWidget() {
-    if(!this.annotation.citeValue() || !this.annotation.citeValue()?.book
-    || !this.annotation.citeValue()?.canto || !this.annotation.citeValue()?.firstLine
-    || !this.annotation.citeValue()?.lastLine){
+    if(!this.annotation.hasValidCiteValue()){
       const emptyDiv = document.createElement('div')
       return emptyDiv
     }
 
     const verseWidgetEl = document.createElement('div')
-    verseWidgetEl.className = "annotation-widget-verse"
+    verseWidgetEl.className = "citation-view-verse"
     const originalLinesEl = document.createElement('pre')
     const originalLines =
       this.viewer
@@ -223,21 +232,12 @@ export class CitationViewWidget {
 
     return verseWidgetEl
   }
-
-  show(){
-    ;
-  }
-
-  destroy(){
-
-  }
 }
 
 /** A wrapper for the w3c annotation object provided by annotorious */
 class CiteAnnotation {
   constructor(annotation){
     this.annotation = annotation
-    console.log(this.annotation)
 
     this.citeBody = this.annotation
       ? this.annotation.body.find(b => b.purpose === 'describing')
@@ -250,5 +250,15 @@ class CiteAnnotation {
 
   citeValue() {
     return this.citeBody ? this.citeBody.value : null
+  }
+
+  hasValidCiteValue() {
+    if(!this.citeValue() || !this.citeValue()?.book
+    || !this.citeValue()?.canto || !this.citeValue()?.firstLine
+    || !this.citeValue()?.lastLine){
+      return false;
+    } else {
+      return true
+    }
   }
 }
