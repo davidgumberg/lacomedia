@@ -16,7 +16,10 @@ export class LaComediaText {
     this.loadPromise = this.loadText(sourceURL)
   }
 
-  // Asynchronously fetch the sourceURL.
+  /**
+   * Asynchronously fetch and parse an html document.
+   * @param {string} sourceURL - The source document to fetch
+   */
   async loadText(sourceURL) {
     const response = await fetch(sourceURL)
     if(!response.ok) {
@@ -81,14 +84,14 @@ export class LaComediaText {
  * @returns {string} I|II|III
 */
 function bookToRoman(book){
-    switch(book.toLowerCase()){
-      case 'inferno':
-        return 'I'
-      case 'purgatorio':
-        return 'II'
-      case 'paradiso':
-        return 'III'
-      default:
-        return null
-    }
+  switch(book.toLowerCase()){
+    case 'inferno':
+      return 'I'
+    case 'purgatorio':
+      return 'II'
+    case 'paradiso':
+      return 'III'
+    default:
+      return null
   }
+}

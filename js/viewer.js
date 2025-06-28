@@ -301,7 +301,6 @@ export class Viewer{
     })
   }
 
-
   /* utility function that returns the .dzi filepath for a given image */
   _imagePath() {
     return(`${DZ_URL_PREFIX}${this.image.ver}/${this.image.book}/${this.image.canto}.dzi`)
