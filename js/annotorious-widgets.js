@@ -279,12 +279,12 @@ class CiteAnnotation {
   }
 
   hasValidCiteValue() {
-    if(!this.citeValue() || !this.citeValue()?.book
-    || !this.citeValue()?.canto || !this.citeValue()?.firstLine
-    || !this.citeValue()?.lastLine){
-      return false;
+    if(this.citeValue() && this.citeValue()?.book
+    && this.citeValue()?.canto && this.citeValue()?.firstLine
+    && this.citeValue()?.lastLine){
+      return true;
     } else {
-      return true
+      return false
     }
   }
 }
