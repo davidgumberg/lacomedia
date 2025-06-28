@@ -1,24 +1,31 @@
 /** @module ./text */
 
-/** Represents a text of the divine comedy sourced from an html file */
+/** Represents a text of the divine comedy sourced from an html file.
+ * TODO: I hand-modified project gutenberg html's and this logic is all based
+ * on that. I need some script for processing those gutenberg html's and that
+ * should be referenced/documented here.
+ */
 export class LaComediaText {
   /**
    * Fetch and parse an HTML encoded text
    * @param {string} sourceURL - The source document to fetch
    */
   constructor(sourceURL) {
-    fetch(sourceURL)
-      .then(response => {
-        if(!response.ok) {
-          throw new Error(`HTTP Error: Status: ${response.status}`)
-        }
+    this.textDocument = null
+    this.isLoaded = false
+    this.loadPromise = this.loadText(sourceURL)
+  }
 
-        return response.text()
-      })
-      .then(text => {
-        const parser = new DOMParser()
-        this.textDocument = parser.parseFromString(text, 'text/html')
-      })
+  // Asynchronously fetch the sourceURL.
+  async loadText(sourceURL) {
+    const response = await fetch(sourceURL)
+    if(!response.ok) {
+      throw new Error(`HTTP Error: Status: ${response.status}`)
+    }
+    const text = await response.text();
+    const parser = new DOMParser();
+    this.textDocument = parser.parseFromString(text, 'text/html')
+    this.isLoaded = true
   }
 
   /**
@@ -30,6 +37,9 @@ export class LaComediaText {
    * @param {string} lastLine - The last line from the given book and canto to be returned.
    */
   getLines(book, canto, firstLine, lastLine){
+    if (!this.isLoaded) {
+      return this.loadPromise.then(() => this.getLines(book, canto, firstLine, lastLine))
+    }
     // All params are required
     if(!book || !canto || !firstLine || !lastLine){
       return NaN
@@ -46,12 +56,13 @@ export class LaComediaText {
 
     // This could be made more efficient with a single loop if 
     // performance turns out to be an issue here (doubtful)
-
     let cantoLines = this.textDocument.querySelector(cantoSelector).innerText
     cantoLines = cantoLines.trim().split(/(?:\n\s*)/).slice((firstLine - 1), (lastLine - 1))
     cantoLines = cantoLines.flatMap( (line, index) => {
       const currLine = firstLine + index
       if(currLine % 3 == 0) {
+        // Terza rima encourages us to add an extra newline after very third
+        // line :)
         return [line, "\n"]
       }
       else {
@@ -78,6 +89,6 @@ function bookToRoman(book){
       case 'paradiso':
         return 'III'
       default:
-        return NaN
+        return null
     }
   }
