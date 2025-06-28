@@ -134,11 +134,9 @@ export class Viewer{
     else {
       this.annotationsVisible = true
       this.anno.setVisible(true)
+      this.anno.readOnly = true
       this.anno.disableEditor = false
     }
-  }
-  enableAnnotations() {
-    this.anno.disableEditor = false
   }
 
   setCantoToNext() {
