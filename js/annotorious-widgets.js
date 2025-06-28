@@ -1,6 +1,12 @@
 import { getAnnoRect } from './annoviewer-plugin'
 import OpenSeadragon from 'openseadragon'
 
+const BOOKS = [
+  { value: 'inferno', label: 'Inferno' },
+  { value: 'purgatorio', label: 'Purgatorio' },
+  { value: 'paradiso', label: 'Paradiso' }
+];
+
 export function CitationEditWidget(args) {
   this.viewer = args.viewer
   this.args = args
@@ -57,6 +63,10 @@ export function CitationEditWidget(args) {
     const bookSelectLabel = document.createElement("label")
     bookSelectLabel.for = "book"
     bookSelectLabel.textContent = "Book"
+
+    BOOKS.forEach(book => {
+      bookSelect.add(new Option(book.label, book.value));
+    });
 
     bookSelect.add(new Option('Inferno', 'inferno'))
     bookSelect.add(new Option('Purgatorio', 'purgatorio'))
