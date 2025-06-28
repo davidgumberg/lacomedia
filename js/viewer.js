@@ -15,10 +15,12 @@ import { debounce } from './util'
 const DZ_URL_PREFIX = "https://infernoparadiso.s3.us-east-2.amazonaws.com/"
 const imageSchemaPath = DZ_URL_PREFIX + 'schema.json';
 
+const STARTING_IMAGE = {book: 'inferno', canto: 'VIII', ver: 'smb'}
+
 /** This mega-class wraps the OSD viewer, the annotorious widgets, and all of our custom
  * controls and widgets. */
 export class Viewer{
-  constructor(dresser, toolbox, startingImage = {book: 'inferno', canto: 'VIII', ver: 'smb'}){
+  constructor(dresser, toolbox, startingImage = STARTING_IMAGE){
     this.dresser = dresser
 
     this.image = startingImage
