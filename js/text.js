@@ -65,7 +65,8 @@ export class LaComediaText {
       const currLine = firstLine + index
       if(currLine % 3 == 0) {
         // Terza rima encourages us to add an extra newline after very third
-        // line :)
+        // line, but we have to do it here, since `LaComediaText` knows about
+        // the canonical line numbers.
         return [line, "\n"]
       }
       else {

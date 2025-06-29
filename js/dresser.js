@@ -118,14 +118,6 @@ export class Drawer{
   }
 
   updateDrawerState(drawerStatus, wasAuto = false) {
-    if (this.setDrawerState(drawerStatus) && wasAuto) {
-      this.wasAutoToggled = true;
-    } else {
-      this.wasAutoToggled = false;
-    }
-  }
-
-  setDrawerState(drawerStatus) {
     switch (drawerStatus) {
       case DrawerStatus.CLOSED:
         this.elDrawer.classList.add('drawer-closed');
@@ -136,7 +128,7 @@ export class Drawer{
         this.elDrawer.classList.remove('drawer-closed');
         break;
     }
-    return true;
+    this.wasAutoToggled = wasAuto
   }
 }
 
