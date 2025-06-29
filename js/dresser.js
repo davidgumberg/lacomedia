@@ -12,30 +12,32 @@ export const DrawerHandleStatus = {
 // TODO: drop elDrawerBooks and maybe all other passed elements,
 // the dresser should be in charge of it's own assembly,
 // no need for it to be generic
-export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elDrawerBooks) {
-  this.drawers = allDrawers
-  this.elHandle = elDrawerHandle
-  this.elHandleContainer = elDrawerHandleContainer
-  this.elDrawerBooks = elDrawerBooks
+export class Dresser {
+  constructor(allDrawers, elDrawerHandle, elDrawerHandleContainer, elDrawerBooks) {
+    this.drawers = allDrawers
+    this.elHandle = elDrawerHandle
+    this.elHandleContainer = elDrawerHandleContainer
+    this.elDrawerBooks = elDrawerBooks
 
-  this.primaryDrawer = this.drawers.find((drawer) => drawer.name === 'books')
+    this.primaryDrawer = this.drawers.find((drawer) => drawer.name === 'books')
+  }
 
-  this.closeAllDrawers = function(wasAuto = false){
+  closeAllDrawers(wasAuto = false) {
     this.drawers.forEach(drawer => {
       drawer.updateDrawerState(DrawerStatus.CLOSED, wasAuto)
     })
   }
 
-  this.isAnyDrawerOpen = function() {
+  isAnyDrawerOpen() {
     return this.drawers.some(drawer => drawer.isOpen())
   }
 
-  this.handleFocusListener = function(_event){
+  handleFocusListener(_event){
     this.updateDrawerHandleState(DrawerHandleStatus.HIDDEN)
     this.primaryDrawer.updateDrawerState(DrawerStatus.OPEN)
   }
 
-  this.updateDrawerHandleState = function(handleStatus) {
+  updateDrawerHandleState(handleStatus) {
     // If any drawer is open, the drawer handle should be HIDDEN
     if(this.isAnyDrawerOpen()){
       this.setDrawerHandleState(DrawerHandleStatus.HIDDEN);
@@ -45,7 +47,7 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
       this.setDrawerHandleState(handleStatus);
   }
 
-  this.isHovered = function() {
+  isHovered() {
     if (this.elHandleContainer.matches(':hover') || this.elHandle.matches(':hover')){
       return true;
     }
@@ -54,7 +56,7 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
     }
   }
 
-  this.addEventListeners = function() {
+  addEventListeners() {
     this.elHandleContainer.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
     this.elHandleContainer.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.HIDDEN))
 
@@ -66,7 +68,7 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
     this.elHandle.addEventListener("focusin", (event) => this.handleFocusListener(event))
   }
 
-  this.setDrawerHandleState = function(handleStatus) {
+  setDrawerHandleState(handleStatus) {
     switch(handleStatus) {
       case DrawerHandleStatus.HIDDEN:
         this.elHandle.classList.add('drawer-handle-hidden')
@@ -87,12 +89,14 @@ export function Dresser(allDrawers, elDrawerHandle, elDrawerHandleContainer, elD
   }
 }
 
-export function Drawer(elDrawer) {
-  this.elDrawer = elDrawer
-  this.name = elDrawer.dataset.drawer
-  this.wasAutoToggled = false
+export class Drawer{
+  constructor(elDrawer) {
+    this.elDrawer = elDrawer
+    this.name = elDrawer.dataset.drawer
+    this.wasAutoToggled = false
+  }
 
-  this.isOpen = function() {
+  isOpen() {
     if (this.elDrawer.classList.contains('drawer-open') 
     && !this.elDrawer.classList.contains('drawer-closed')) {
       return true
@@ -105,11 +109,11 @@ export function Drawer(elDrawer) {
       throw new Error('Invalid drawer state reached');
   }
 
-  this.isClosed = function() {
+  isClosed() {
     return !this.isOpen()
   }
 
-  this.updateDrawerState = function(drawerStatus, wasAuto = false) {
+  updateDrawerState(drawerStatus, wasAuto = false) {
     if (this.setDrawerState(drawerStatus) && wasAuto) {
       this.wasAutoToggled = true;
     } else {
@@ -117,7 +121,7 @@ export function Drawer(elDrawer) {
     }
   }
 
-  this.setDrawerState = function(drawerStatus) {
+  setDrawerState(drawerStatus) {
     switch (drawerStatus) {
       case DrawerStatus.CLOSED:
         this.elDrawer.classList.add('drawer-closed');
