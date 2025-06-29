@@ -22,7 +22,7 @@ const STARTING_IMAGE = {book: 'inferno', canto: 'VIII', ver: 'smb'}
 export class Viewer{
   constructor(dresser, toolbox, startingImage = STARTING_IMAGE){
     this.dresser = dresser
-
+    this.toolbox = toolbox
     this.image = startingImage
 
     this.osd = OpenSeadragon({
