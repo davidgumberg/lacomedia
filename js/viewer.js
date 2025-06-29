@@ -156,7 +156,8 @@ export class Viewer{
         schemaNextBook = this.imageSchema.books.find((schemaBook) => schemaBook.name === "paradiso")
       }
       else{
-        throw "nextCanto() called when it shouldn't have been"
+        // Don't go to the next book if we're in paradiso.
+        return
       }
       this.setCanto(schemaNextBook.name, schemaNextBook.cantos[0].name)
     }
@@ -179,7 +180,8 @@ export class Viewer{
         schemaPrevBook = this.imageSchema.books.find((schemaBook) => schemaBook.name === "purgatorio")
       }
       else{
-        throw "prevCanto() called when it shouldn't have been"
+        // Don't go to the previous book if we're in inferno.
+        return
       }
       this.setCanto(schemaPrevBook.name, schemaPrevBook.cantos[schemaPrevBook.length-1].name)
     }
