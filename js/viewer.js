@@ -273,7 +273,7 @@ export class Viewer{
   _buildBookLinks(schemaBook) {
     const elTargetDiv =
       this.dresser
-        .drawers.find((drawer) => drawer.name === schemaBook.name)
+        .drawers[schemaBook.name]
         .elDrawer
         .querySelector('.drawer-contents')
 

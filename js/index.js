@@ -8,17 +8,17 @@ const elDrawerInferno = document.querySelector ('[data-drawer="inferno"]')
 const elDrawerPurgatorio = document.querySelector ('[data-drawer="purgatorio"]')
 const elDrawerParadiso = document.querySelector ('[data-drawer="paradiso"]')
 
-const drawerBooks = new Drawer(elDrawerBooks)
-const drawerInferno = new Drawer(elDrawerInferno)
-const drawerPurgatorio = new Drawer(elDrawerPurgatorio)
-const drawerParadiso = new Drawer(elDrawerParadiso)
-
-const allDrawers = [drawerBooks, drawerInferno, drawerPurgatorio, drawerParadiso]
+const drawers = {
+  books: new Drawer(elDrawerBooks),
+  inferno: new Drawer(elDrawerInferno),
+  purgatorio: new Drawer(elDrawerPurgatorio),
+  paradiso: new Drawer(elDrawerParadiso)
+}
 
 const elHandleContainer = document.querySelector('[data-drawer="container"]')
 const elHandle = document.querySelector('[data-drawer="handle"]')
 
-const dresser = new Dresser(allDrawers, elHandle, elHandleContainer, elDrawerBooks)
+const dresser = new Dresser(drawers, elHandle, elHandleContainer, elDrawerBooks)
 dresser.addEventListeners()
 
 const elInfernoLink = document.querySelector ('[data-book-link="inferno"]')
@@ -30,8 +30,9 @@ elPurgatorioLink.addEventListener("click", openBookDrawer)
 elParadisoLink.addEventListener  ("click", openBookDrawer)
 
 const viewer = new Viewer(dresser)
+// If there's enough room on the sides of the screen, we always show the drawers.
 if(viewer.hasBigBlackBars()){
-  drawerBooks.updateDrawerState(DrawerStatus.OPEN, true);
+  drawers['books'].updateDrawerState(DrawerStatus.OPEN, true);
 }
 
 const toolbox = new Toolbox(document.querySelector('section.toolbox'), viewer)
@@ -43,33 +44,23 @@ elsBackBtn.forEach( (backBtn) => {
   backBtn.addEventListener("click", backBtnClickHandler)
 })
 
+// The event handler for the back button, closes drawers, opens the book drawer
+// if we were inside of a cantos drawer.
 function backBtnClickHandler(event){
-  clickedLink = event.currentTarget.dataset.headliner
-  if(clickedLink === 'books'){
-    dresser.closeAllDrawers()
-  }
-  else if(clickedLink === 'cantos') {
-    dresser.closeAllDrawers()
+  const clickedBackFrom = event.currentTarget.dataset.headliner
+  dresser.closeAllDrawers()
+
+  // If we were looking at a list of cantos, go back to the book view
+  if(clickedBackFrom === 'cantos') {
     dresser.primaryDrawer.updateDrawerState(DrawerStatus.OPEN)
   }
 }
 
 function openBookDrawer(event){
-  const clickedBook = event.target
-  const book = clickedBook.dataset.bookLink
-  let targetDrawer
-  switch(book){
-    case 'inferno':
-      targetDrawer = drawerInferno
-      break;
-    case 'purgatorio':
-      targetDrawer = drawerPurgatorio
-      break;
-    case 'paradiso':
-      targetDrawer = drawerParadiso
-      break;
-  }
+  const book = event.target.dataset.bookLink
+  let targetDrawer = drawers[book]
 
-  dresser.closeAllDrawers(false)
+  // TODO: This should be internal to dressers/drawers
+  dresser.closeAllDrawers(/*was_auto=*/false)
   targetDrawer.updateDrawerState(DrawerStatus.OPEN, false)
 }

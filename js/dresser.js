@@ -19,17 +19,21 @@ export class Dresser {
     this.elHandleContainer = elDrawerHandleContainer
     this.elDrawerBooks = elDrawerBooks
 
-    this.primaryDrawer = this.drawers.find((drawer) => drawer.name === 'books')
+    this.primaryDrawer = this.drawers['books']
   }
 
   closeAllDrawers(wasAuto = false) {
-    this.drawers.forEach(drawer => {
+    for (const drawer of Object.values(this.drawers)) {
       drawer.updateDrawerState(DrawerStatus.CLOSED, wasAuto)
-    })
+    }
   }
 
   isAnyDrawerOpen() {
-    return this.drawers.some(drawer => drawer.isOpen())
+    for (const drawer of Object.values(this.drawers)) {
+      if (drawer.isOpen()) return true
+    }
+
+    return false
   }
 
   handleFocusListener(_event){
