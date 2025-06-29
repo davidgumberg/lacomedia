@@ -71,7 +71,7 @@ export class Viewer{
     this.annotationsVisible = true
     this.anno.setVisible(true)
     this.anno.readOnly = true
-    this.anno.disableEditor = false
+    this.anno.disableEditor = true
     
     this.anno.on('selectAnnotation', (annotation, element) => {
       // Fit bounds on annote selection

@@ -31,7 +31,7 @@ export class Toolbox {
   closeToolboxHandle() {
     this.setToolboxHandleState(ToolboxHandleStatus.CLOSED)
 
-    // when we close the toolobx
+    // when we close the toolbox
     this.setToolboxToolsState(ToolboxToolsStatus.CLOSED)
   }
 
