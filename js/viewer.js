@@ -213,7 +213,7 @@ export class Viewer{
 
     // Canvas click is identically handled to animation-start
     this.osd.addHandler("canvas-click", (_event) => {
-      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 20}, "animation-start")
+      this.debouncedOsdAnimationHandler({leading: true, trailing: true, delay: 0}, "animation-start")
     })
 
     this.osd.addHandler("animation-finish", (_event) => {
