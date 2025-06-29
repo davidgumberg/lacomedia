@@ -97,7 +97,7 @@ export class Toolbox {
     }
     else if(status === ToolboxHandleStatus.CLOSED){
       this.elToolboxHandle.classList.add('toolbox-handle-closed')
-      this.elToolbox.classList.remove('toolbox-handle-open')
+      this.elToolboxHandle.classList.remove('toolbox-handle-open')
     }
   }
 
