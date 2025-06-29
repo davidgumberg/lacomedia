@@ -1,3 +1,5 @@
+import { ElementAndState } from './util.js'
+
 export const DrawerStatus = {
     CLOSED: 'drawer-close',
     OPEN: 'drawer-open',
@@ -7,38 +9,6 @@ export const DrawerHandleStatus = {
     HIDDEN: 'drawer-handle-hidden',
     PEEKING: 'drawer-handle-peeking',
     ERECT: 'drawer-handle-erect',
-}
-
-/**
- * A utility class that takes an element and a list of exclusive CSS classes that
- * represent some state for the element.
- */
-class ElementAndState {
-    constructor(element, states) {
-        this.el = element;
-        this.states = Object.values(states);
-    }
-
-    /** When you set one state remove every other state from the element
-     *  and add that one.
-     */
-    setState(newState) {
-        // Remove all possible states
-        this.states.forEach(state => {
-            this.el.classList.remove(`${state}`);
-        });
-        
-        // Add the new state
-        this.el.classList.add(`${newState}`);
-    }
-
-    getState() {
-      for (const state of this.states) {
-        if(this.el.classList.contains(state)) {
-          return state
-        }
-      }
-    }
 }
 
 // TODO: drop passed elements

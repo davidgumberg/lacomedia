@@ -36,3 +36,36 @@ export function debounce(func) {
     }, options.delay)
   }
 }
+
+/**
+ * A utility class that takes an element and a list of exclusive CSS classes that
+ * represent some state for the element.
+ */
+export class ElementAndState {
+    constructor(element, states) {
+        this.el = element;
+        this.states = Object.values(states);
+    }
+
+    /** When you set one state remove every other state from the element
+     *  and add that one.
+     */
+    setState(newState) {
+        // Remove all possible states
+        this.states.forEach(state => {
+            this.el.classList.remove(`${state}`);
+        });
+        
+        // Add the new state
+        this.el.classList.add(`${newState}`);
+    }
+
+    getState() {
+      for (const state of this.states) {
+        if(this.el.classList.contains(state)) {
+          return state
+        }
+      }
+    }
+}
+
