@@ -1,23 +1,54 @@
 export const DrawerStatus = {
-    CLOSED: 0,
-    OPEN: 1,
+    CLOSED: 'drawer-close',
+    OPEN: 'drawer-open',
 }
 
 export const DrawerHandleStatus = {
-    HIDDEN: 0,
-    PEEKING: 1,
-    ERECT: 2,
+    HIDDEN: 'drawer-handle-hidden',
+    PEEKING: 'drawer-handle-peeking',
+    ERECT: 'drawer-handle-erect',
 }
 
-// TODO: drop elDrawerBooks and maybe all other passed elements,
+/**
+ * A utility class that takes an element and a list of exclusive CSS classes that
+ * represent some state for the element.
+ */
+class ElementAndState {
+    constructor(element, states) {
+        this.el = element;
+        this.states = Object.values(states);
+    }
+
+    /** When you set one state remove every other state from the element
+     *  and add that one.
+     */
+    setState(newState) {
+        // Remove all possible states
+        this.states.forEach(state => {
+            this.el.classList.remove(`${state}`);
+        });
+        
+        // Add the new state
+        this.el.classList.add(`${newState}`);
+    }
+
+    getState() {
+      for (const state of this.states) {
+        if(this.el.classList.contains(state)) {
+          return state
+        }
+      }
+    }
+}
+
+// TODO: drop passed elements
 // the dresser should be in charge of it's own assembly,
 // no need for it to be generic
 export class Dresser {
-  constructor(allDrawers, elDrawerHandle, elDrawerHandleContainer, elDrawerBooks) {
+  constructor(allDrawers, elDrawerHandle, elDrawerHandleContainer) {
     this.drawers = allDrawers
-    this.elHandle = elDrawerHandle
     this.elHandleContainer = elDrawerHandleContainer
-    this.elDrawerBooks = elDrawerBooks
+    this.drawerHandle = new ElementAndState(elDrawerHandle, DrawerHandleStatus)
 
     this.primaryDrawer = this.drawers['books']
   }
@@ -42,75 +73,42 @@ export class Dresser {
   }
 
   updateDrawerHandleState(handleStatus) {
-    // If any drawer is open, the drawer handle should be HIDDEN
+    // If any drawer is open, the drawer handle should be HIDDEN, ignore the status.
     if(this.isAnyDrawerOpen()){
-      this.setDrawerHandleState(DrawerHandleStatus.HIDDEN);
+      this.drawerHandle.setState(DrawerHandleStatus.HIDDEN)
     }
-    // If the drawer is closed, pass through to setDrawerHandleState
-    else if(this.elDrawerBooks.classList.contains('drawer-closed'))
-      this.setDrawerHandleState(handleStatus);
+    else {
+      // Pass through to setState
+      this.drawerHandle.setState(handleStatus)
+    }
   }
 
   isHovered() {
-    if (this.elHandleContainer.matches(':hover') || this.elHandle.matches(':hover')){
-      return true;
-    }
-    else {
-      return false;
-    }
+    return this.elHandleContainer.matches(':hover') || this.drawerHandle.el.matches(':hover')
   }
 
   addEventListeners() {
     this.elHandleContainer.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
     this.elHandleContainer.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.HIDDEN))
 
-    this.elHandle.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.ERECT))
-    this.elHandle.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
+    this.drawerHandle.el.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.ERECT))
+    this.drawerHandle.el.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
 
     // Focusing the drawer handle should open the primary drawer
-    this.elHandle.addEventListener("click", (event) => this.handleFocusListener(event))
-    this.elHandle.addEventListener("focusin", (event) => this.handleFocusListener(event))
-  }
-
-  setDrawerHandleState(handleStatus) {
-    switch(handleStatus) {
-      case DrawerHandleStatus.HIDDEN:
-        this.elHandle.classList.add('drawer-handle-hidden')
-        this.elHandle.classList.remove('drawer-handle-peeking')
-        this.elHandle.classList.remove('drawer-handle-erect')
-        break;
-      case DrawerHandleStatus.PEEKING:
-        this.elHandle.classList.add('drawer-handle-peeking')
-        this.elHandle.classList.remove('drawer-handle-hidden')
-        this.elHandle.classList.remove('drawer-handle-erect')
-        break;
-      case DrawerHandleStatus.ERECT:
-        this.elHandle.classList.add('drawer-handle-erect')
-        this.elHandle.classList.remove('drawer-handle-hidden')
-        this.elHandle.classList.remove('drawer-handle-peeking')
-        break;
-    }
+    this.drawerHandle.el.addEventListener("click", (event) => this.handleFocusListener(event))
+    this.drawerHandle.el.addEventListener("focusin", (event) => this.handleFocusListener(event))
   }
 }
 
-export class Drawer{
+export class Drawer {
   constructor(elDrawer) {
-    this.elDrawer = elDrawer
+    this.drawer = new ElementAndState(elDrawer, DrawerStatus)
     this.name = elDrawer.dataset.drawer
     this.wasAutoToggled = false
   }
 
   isOpen() {
-    if (this.elDrawer.classList.contains('drawer-open') 
-    && !this.elDrawer.classList.contains('drawer-closed')) {
-      return true
-    }
-    else if (!this.elDrawer.classList.contains('drawer-open')
-          &&  this.elDrawer.classList.contains('drawer-closed')){
-      return false
-    }
-    else 
-      throw new Error('Invalid drawer state reached');
+    return this.drawer.getState() == DrawerStatus.OPEN
   }
 
   isClosed() {
@@ -118,16 +116,7 @@ export class Drawer{
   }
 
   updateDrawerState(drawerStatus, wasAuto = false) {
-    switch (drawerStatus) {
-      case DrawerStatus.CLOSED:
-        this.elDrawer.classList.add('drawer-closed');
-        this.elDrawer.classList.remove('drawer-open');
-        break;
-      case DrawerStatus.OPEN:
-        this.elDrawer.classList.add('drawer-open');
-        this.elDrawer.classList.remove('drawer-closed');
-        break;
-    }
+    this.drawer.setState(drawerStatus)
     this.wasAutoToggled = wasAuto
   }
 }

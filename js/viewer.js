@@ -269,12 +269,13 @@ export class Viewer{
     }
   }
 
+  // This is a layer violation!
   /* Assemble and append links to all the canto images */
   _buildBookLinks(schemaBook) {
     const elTargetDiv =
       this.dresser
         .drawers[schemaBook.name]
-        .elDrawer
+        .drawer.el
         .querySelector('.drawer-contents')
 
     schemaBook.cantos.forEach(canto => {
