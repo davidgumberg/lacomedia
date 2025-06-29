@@ -88,9 +88,11 @@ export class Dresser {
   }
 
   addEventListeners() {
+    // When the mouse enters the general perimeter of the handle, start showing it a bit.
     this.elHandleContainer.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
     this.elHandleContainer.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.HIDDEN))
 
+    // When the mouse is over the drawer handle, show it.
     this.drawerHandle.el.addEventListener("mouseenter", () => this.updateDrawerHandleState(DrawerHandleStatus.ERECT))
     this.drawerHandle.el.addEventListener("mouseleave", () => this.updateDrawerHandleState(DrawerHandleStatus.PEEKING))
 

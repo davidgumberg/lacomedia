@@ -90,7 +90,6 @@ export class Viewer{
     })
   }
 
-
   /** Sets image to the book, canto and version provided. Used by the setCantotoNext() and prev
    * and by the dresser Canto menu */
   setCanto(book, canto, ver = undefined) {
