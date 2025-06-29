@@ -68,8 +68,10 @@ export class Viewer{
     BetterPolygon(this.anno);
     this.anno.setDrawingTool('polygon')
 
-    //this.annotationsVisible = true
-    //this.anno.disableEditor = true
+    this.annotationsVisible = true
+    this.anno.setVisible(true)
+    this.anno.readOnly = true
+    this.anno.disableEditor = false
     
     this.anno.on('selectAnnotation', (annotation, element) => {
       // Fit bounds on annote selection
