@@ -36,6 +36,7 @@ export class Viewer{
           clickToZoom: false,
           dblClickToZoom: true,
       },
+      crossOriginPolicy: 'Anonymous',
     });
 
     this.addEventListeners()
