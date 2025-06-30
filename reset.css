@@ -1,3 +1,5 @@
+/* reset some default browser styles that we don't like. */
+
 html {
   box-sizing: border-box;
   user-select: none;
