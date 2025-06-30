@@ -51,6 +51,9 @@ export class ElementAndState {
      *  and add that one.
      */
     setState(newState) {
+        if (!this.states.includes(newState)) { 
+          throw Error("ElementAndState: Attempted to set an invalid state.")
+        }
         // Remove all possible states
         this.states.forEach(state => {
             this.el.classList.remove(`${state}`);
@@ -60,12 +63,30 @@ export class ElementAndState {
         this.el.classList.add(`${newState}`);
     }
 
+    toggleState() {
+      if(this.states.length != 2) {
+        throw Error("ElementAndState: Can only toggle state when there are exactly two.")
+      }
+
+      const curr_state = this.getState()
+      if(curr_state === undefined) {
+        throw Error("ElementAndState: toggleState() invoked when no state was set")
+      }
+
+      this.setState(this.states.find(state => state !== curr_state))
+    }
+
     getState() {
+      // Return undefined if no state is set or more than one is set.
+      if(this.el.classList.length != 1) {
+        return undefined
+      }
       for (const state of this.states) {
         if(this.el.classList.contains(state)) {
           return state
         }
       }
+      return undefined
     }
 }
 
